@@ -1,0 +1,21 @@
+{
+  "name": "lancedesk/lancedesk-smart-dynamic-accordion",
+  "description": "Secure, modular Elementor smart dynamic accordion widget for WordPress.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcsstandards/phpcsutils": "^1.0",
+    "wp-coding-standards/wpcs": "^3.1",
+    "squizlabs/php_codesniffer": "^3.10"
+  },
+  "scripts": {
+    "lint:phpcs": "phpcs --standard=phpcs.xml.dist",
+    "lint:php": "php -l lancedesk-smart-dynamic-accordion.php && php -l includes/class-ldrj-hbda-plugin.php && php -l includes/widgets/class-ldrj-hbda-smart-accordion-widget.php && php -l uninstall.php"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

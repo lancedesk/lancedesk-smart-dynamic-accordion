@@ -2,6 +2,8 @@
 
 Secure, modular, and Elementor-native accordion widget for WordPress with both manual repeater content and smart dynamic post-driven rendering.
 
+[![CI](https://github.com/lancedesk/lancedesk-smart-dynamic-accordion/actions/workflows/ci.yml/badge.svg)](https://github.com/lancedesk/lancedesk-smart-dynamic-accordion/actions/workflows/ci.yml)
+
 ## Highlights
 
 - Manual accordion items with title + rich content editor.
