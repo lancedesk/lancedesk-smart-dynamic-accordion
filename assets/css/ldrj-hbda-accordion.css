@@ -73,6 +73,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	min-width: 1em;
 }
 
 .ldrj-hbda-icon-collapse {
@@ -85,6 +86,13 @@
 
 .ldrj-hbda-item.is-open .ldrj-hbda-icon-collapse {
 	display: inline-flex;
+}
+
+.ldrj-hbda-icon-fallback {
+	font-size: 1em;
+	line-height: 1;
+	font-weight: inherit;
+	display: inline-block;
 }
 
 .ldrj-hbda-content-wrap {

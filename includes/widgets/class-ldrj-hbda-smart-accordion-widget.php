@@ -94,6 +94,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 	protected function register_controls(): void {
 		$this->ldrj_hbda_register_content_controls();
 		$this->ldrj_hbda_register_style_controls();
+		$this->ldrj_hbda_register_icon_style_controls();
 	}
 
 	/**
@@ -695,18 +696,6 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
-			'ldrj_hbda_icon_color_normal',
-			array(
-				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
-				'type'      => Controls_Manager::COLOR,
-				'default'   => '#03195f',
-				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-icon' => 'color: {{VALUE}};',
-				),
-			)
-		);
-
 		$this->end_controls_tab();
 
 		$this->start_controls_tab(
@@ -738,17 +727,6 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
-			'ldrj_hbda_icon_color_hover',
-			array(
-				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
-				'type'      => Controls_Manager::COLOR,
-				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-icon' => 'color: {{VALUE}} !important;',
-				),
-			)
-		);
-
 		$this->end_controls_tab();
 
 		$this->start_controls_tab(
@@ -776,17 +754,6 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .ldrj-hbda-item.is-open .ldrj-hbda-trigger' => 'background-color: {{VALUE}};',
-				),
-			)
-		);
-
-		$this->add_control(
-			'ldrj_hbda_icon_color_active',
-			array(
-				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
-				'type'      => Controls_Manager::COLOR,
-				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-item.is-open .ldrj-hbda-icon' => 'color: {{VALUE}};',
 				),
 			)
 		);
@@ -860,25 +827,6 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_responsive_control(
-			'ldrj_hbda_icon_size',
-			array(
-				'label'      => esc_html__( 'Icon Size', 'lancedesk-smart-dynamic-accordion' ),
-				'type'       => Controls_Manager::SLIDER,
-				'size_units' => array( 'px' ),
-				'range'      => array(
-					'px' => array(
-						'min' => 8,
-						'max' => 80,
-					),
-				),
-				'selectors'  => array(
-					'{{WRAPPER}} .ldrj-hbda-icon' => 'font-size: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .ldrj-hbda-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-				),
-			)
-		);
-
 		$this->add_group_control(
 			Group_Control_Border::get_type(),
 			array(
@@ -907,6 +855,113 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Dedicated icon style controls.
+	 *
+	 * @return void
+	 */
+	private function ldrj_hbda_register_icon_style_controls(): void {
+		$this->start_controls_section(
+			'ldrj_hbda_section_style_icon',
+			array(
+				'label' => esc_html__( 'Icon', 'lancedesk-smart-dynamic-accordion' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_icon_size',
+			array(
+				'label'      => esc_html__( 'Size', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 8,
+						'max' => 80,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'ldrj_hbda_icon_typography',
+				'selector' => '{{WRAPPER}} .ldrj-hbda-icon, {{WRAPPER}} .ldrj-hbda-icon-fallback',
+			)
+		);
+
+		$this->start_controls_tabs( 'ldrj_hbda_icon_state_tabs' );
+
+		$this->start_controls_tab(
+			'ldrj_hbda_icon_state_normal',
+			array(
+				'label' => esc_html__( 'Normal', 'lancedesk-smart-dynamic-accordion' ),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_icon_color_normal',
+			array(
+				'label'     => esc_html__( 'Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#03195f',
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-icon' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'ldrj_hbda_icon_state_hover',
+			array(
+				'label' => esc_html__( 'Hover', 'lancedesk-smart-dynamic-accordion' ),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_icon_color_hover',
+			array(
+				'label'     => esc_html__( 'Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-icon' => 'color: {{VALUE}} !important;',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'ldrj_hbda_icon_state_active',
+			array(
+				'label' => esc_html__( 'Active', 'lancedesk-smart-dynamic-accordion' ),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_icon_color_active',
+			array(
+				'label'     => esc_html__( 'Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-item.is-open .ldrj-hbda-icon' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
 		$this->end_controls_section();
 	}
 
@@ -948,7 +1003,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 			echo '<span class="ldrj-hbda-trigger-text">' . esc_html( $item['title'] ) . '</span>';
 			echo '<span class="ldrj-hbda-icon" aria-hidden="true">';
 			echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
-			echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings['ldrj_hbda_collapse_icon'] ?? array(), '-' ) . '</span>';
+			echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
 			echo '</span>';
 			echo '</button>';
 			echo '<div id="' . esc_attr( $item_id ) . '" class="ldrj-hbda-content-wrap" ' . ( $is_expanded ? '' : 'hidden' ) . '>';
@@ -1191,7 +1246,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 	 */
 	private function ldrj_hbda_render_icon_markup( array $icon_setting, string $fallback ): string {
 		if ( empty( $icon_setting['value'] ) ) {
-			return esc_html( $fallback );
+			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
 		}
 
 		ob_start();
@@ -1204,7 +1259,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$markup = ob_get_clean();
 
 		if ( ! is_string( $markup ) || '' === $markup ) {
-			return esc_html( $fallback );
+			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
 		}
 
 		/*
@@ -1213,7 +1268,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 		 * to text symbols when only font-icon markup is returned.
 		 */
 		if ( false === strpos( $markup, '<svg' ) ) {
-			return esc_html( $fallback );
+			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
 		}
 
 		return $markup;
