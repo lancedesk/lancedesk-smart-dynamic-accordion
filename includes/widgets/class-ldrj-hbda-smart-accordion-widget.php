@@ -237,6 +237,19 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'ldrj_hbda_icon_render_mode',
+			array(
+				'label'   => esc_html__( 'Icon Render Mode', 'lancedesk-smart-dynamic-accordion' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'auto',
+				'options' => array(
+					'auto' => esc_html__( 'Auto (SVG if available)', 'lancedesk-smart-dynamic-accordion' ),
+					'text' => esc_html__( 'Text Only (+ / −)', 'lancedesk-smart-dynamic-accordion' ),
+				),
+			)
+		);
+
+		$this->add_control(
 			'ldrj_hbda_post_type',
 			array(
 				'label'     => esc_html__( 'Post Type', 'lancedesk-smart-dynamic-accordion' ),
@@ -1022,8 +1035,8 @@ class Smart_Accordion_Widget extends Widget_Base {
 			echo '<button type="button" class="ldrj-hbda-trigger" aria-expanded="' . esc_attr( $is_expanded ? 'true' : 'false' ) . '" aria-controls="' . esc_attr( $item_id ) . '">';
 			echo '<span class="ldrj-hbda-trigger-text">' . esc_html( $item['title'] ) . '</span>';
 			echo '<span class="ldrj-hbda-icon" aria-hidden="true">';
-			echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
-			echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
+			echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
+			echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
 			echo '</span>';
 			echo '</button>';
 			echo '<div id="' . esc_attr( $item_id ) . '" class="ldrj-hbda-content-wrap" ' . ( $is_expanded ? '' : 'hidden' ) . '>';
@@ -1259,12 +1272,18 @@ class Smart_Accordion_Widget extends Widget_Base {
 	/**
 	 * Render selected Elementor icon setting with fallback text.
 	 *
+	 * @param array<string,mixed> $settings Widget settings.
 	 * @param array<string,mixed> $icon_setting Icon control value.
 	 * @param string              $fallback Fallback character.
 	 *
 	 * @return string
 	 */
-	private function ldrj_hbda_render_icon_markup( array $icon_setting, string $fallback ): string {
+	private function ldrj_hbda_render_icon_markup( array $settings, array $icon_setting, string $fallback ): string {
+		$render_mode = isset( $settings['ldrj_hbda_icon_render_mode'] ) ? sanitize_key( (string) $settings['ldrj_hbda_icon_render_mode'] ) : 'auto';
+		if ( 'text' === $render_mode ) {
+			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
+		}
+
 		if ( empty( $icon_setting['value'] ) ) {
 			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
 		}
