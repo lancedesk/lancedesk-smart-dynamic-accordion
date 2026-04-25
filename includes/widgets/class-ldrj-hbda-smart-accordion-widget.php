@@ -193,10 +193,15 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'       => esc_html__( 'Expand Icon', 'lancedesk-smart-dynamic-accordion' ),
 				'type'        => Controls_Manager::ICONS,
 				'default'     => array(
-					'value'   => 'fas fa-plus',
-					'library' => 'fa-solid',
+					'value'   => 'eicon-plus',
+					'library' => 'eicons',
 				),
 				'recommended' => array(
+					'eicons' => array(
+						'plus',
+						'chevron-down',
+						'arrow-down',
+					),
 					'fa-solid' => array(
 						'plus',
 						'chevron-down',
@@ -212,10 +217,15 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'       => esc_html__( 'Collapse Icon', 'lancedesk-smart-dynamic-accordion' ),
 				'type'        => Controls_Manager::ICONS,
 				'default'     => array(
-					'value'   => 'fas fa-minus',
-					'library' => 'fa-solid',
+					'value'   => 'eicon-minus',
+					'library' => 'eicons',
 				),
 				'recommended' => array(
+					'eicons' => array(
+						'minus',
+						'chevron-up',
+						'arrow-up',
+					),
 					'fa-solid' => array(
 						'minus',
 						'times',
@@ -701,7 +711,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'     => esc_html__( 'Title Color', 'lancedesk-smart-dynamic-accordion' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-trigger-text' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-trigger-text' => 'color: {{VALUE}} !important;',
 				),
 			)
 		);
@@ -712,7 +722,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-icon' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover .ldrj-hbda-icon' => 'color: {{VALUE}} !important;',
 				),
 			)
 		);
@@ -1039,7 +1049,13 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$posts = get_posts( $query_args );
 		$items = array();
 
-		foreach ( $posts as $post ) {
+		global $post;
+		$original_post = $post;
+
+		foreach ( $posts as $query_post ) {
+			$post = $query_post;
+			setup_postdata( $post );
+
 			$title   = sanitize_text_field( get_the_title( $post ) );
 			$content = '';
 
@@ -1059,7 +1075,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 					$content = $this->ldrj_hbda_format_meta_content( (string) $raw_meta, $meta_format );
 				}
 			} else {
-				$content = apply_filters( 'the_content', (string) $post->post_content );
+				$content = apply_filters( 'the_content', get_the_content( null, false, $post ) );
 			}
 
 			if ( '' === $content && has_post_thumbnail( $post ) ) {
@@ -1079,6 +1095,9 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'read_more_nofollow' => $read_more_nofollow ? 'yes' : 'no',
 			);
 		}
+
+		wp_reset_postdata();
+		$post = $original_post;
 
 		return $items;
 	}

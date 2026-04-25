@@ -44,6 +44,11 @@
 	line-height: 1.35;
 }
 
+.ldrj-hbda-trigger:hover .ldrj-hbda-trigger-text,
+.ldrj-hbda-trigger:hover .ldrj-hbda-icon {
+	color: inherit;
+}
+
 .ldrj-hbda-icon {
 	font-size: 28px;
 	line-height: 1;

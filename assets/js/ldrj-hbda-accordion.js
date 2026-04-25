@@ -15,6 +15,11 @@
 	}
 
 	function initAccordion(root) {
+		if (!root || root.getAttribute('data-hbda-init') === 'yes') {
+			return;
+		}
+		root.setAttribute('data-hbda-init', 'yes');
+
 		var multiOpen = root.getAttribute('data-multi-open') === 'yes';
 		var triggers = root.querySelectorAll('.ldrj-hbda-trigger');
 
@@ -47,7 +52,30 @@
 		});
 	}
 
-	document.addEventListener('DOMContentLoaded', function () {
+	function initAllAccordions(scope) {
+		var context = scope || document;
+		context.querySelectorAll('.ldrj-hbda-accordion').forEach(initAccordion);
+	}
+
+	function boot() {
+		initAllAccordions(document);
+
+		if (window.elementorFrontend && window.elementorFrontend.hooks) {
+			window.elementorFrontend.hooks.addAction('frontend/element_ready/global', function ($scope) {
+				if ($scope && $scope[0]) {
+					initAllAccordions($scope[0]);
+				}
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', boot);
+	} else {
+		boot();
+	}
+
+	document.addEventListener('elementor/popup/show', function () {
 		document.querySelectorAll('.ldrj-hbda-accordion').forEach(initAccordion);
 	});
 })();
