@@ -1,0 +1,45 @@
+name: Release ZIP
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    name: Build plugin ZIP and upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive package names
+        id: vars
+        run: |
+          echo "tag_name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          echo "zip_name=dynamic-accordion-${GITHUB_REF_NAME}.zip" >> "$GITHUB_OUTPUT"
+          echo "root_dir=dynamic-accordion" >> "$GITHUB_OUTPUT"
+
+      - name: Build release ZIP
+        run: |
+          mkdir -p dist/${{ steps.vars.outputs.root_dir }}
+          rsync -av \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="vendor" \
+            --exclude="node_modules" \
+            --exclude=".DS_Store" \
+            --exclude="*.zip" \
+            ./ dist/${{ steps.vars.outputs.root_dir }}/
+          cd dist
+          zip -r "${{ steps.vars.outputs.zip_name }}" "${{ steps.vars.outputs.root_dir }}"
+
+      - name: Upload ZIP to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag_name }}
+          files: dist/${{ steps.vars.outputs.zip_name }}
