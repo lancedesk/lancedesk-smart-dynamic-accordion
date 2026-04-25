@@ -40,16 +40,49 @@ final class Plugin {
 	 * Constructor.
 	 */
 	private function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'ldrj_hbda_init' ) );
+		add_action( 'init', array( $this, 'ldrj_hbda_load_textdomain' ) );
+		add_action( 'plugins_loaded', array( $this, 'ldrj_hbda_bootstrap' ) );
 	}
 
 	/**
-	 * Initialize plugin only after Elementor is available.
+	 * Load plugin textdomain.
+	 *
+	 * @return void
+	 */
+	public function ldrj_hbda_load_textdomain(): void {
+		load_plugin_textdomain(
+			'lancedesk-smart-dynamic-accordion',
+			false,
+			dirname( plugin_basename( LDRJ_HBDA_PLUGIN_FILE ) ) . '/languages'
+		);
+	}
+
+	/**
+	 * Bootstrap plugin after WordPress plugins are loaded.
+	 *
+	 * @return void
+	 */
+	public function ldrj_hbda_bootstrap(): void {
+		if ( ! did_action( 'elementor/loaded' ) ) {
+			add_action( 'admin_notices', array( $this, 'ldrj_hbda_missing_elementor_notice' ) );
+			return;
+		}
+
+		/*
+		 * Initialize only when Elementor itself is ready so required base classes
+		 * (like Elementor\Widget_Base) are guaranteed to be available.
+		 */
+		add_action( 'elementor/init', array( $this, 'ldrj_hbda_init' ) );
+	}
+
+	/**
+	 * Initialize plugin only after Elementor is fully initialized.
 	 *
 	 * @return void
 	 */
 	public function ldrj_hbda_init(): void {
-		if ( ! did_action( 'elementor/loaded' ) ) {
+		if ( ! class_exists( '\Elementor\Widget_Base' ) ) {
+			add_action( 'admin_notices', array( $this, 'ldrj_hbda_missing_elementor_notice' ) );
 			return;
 		}
 
@@ -64,6 +97,21 @@ final class Plugin {
 	 */
 	private function ldrj_hbda_load_files(): void {
 		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/widgets/class-ldrj-hbda-smart-accordion-widget.php';
+	}
+
+	/**
+	 * Admin notice shown when Elementor is unavailable.
+	 *
+	 * @return void
+	 */
+	public function ldrj_hbda_missing_elementor_notice(): void {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		echo '<div class="notice notice-warning"><p>';
+		echo esc_html__( 'LanceDesk Smart Dynamic Accordion requires Elementor to be installed and active.', 'lancedesk-smart-dynamic-accordion' );
+		echo '</p></div>';
 	}
 
 	/**
