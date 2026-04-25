@@ -79,6 +79,10 @@ dynamic-accordion/
 - Additional content templates for post cards/media blocks inside accordion bodies.
 - Comprehensive unit and integration tests.
 
+## Contributing
+
+Contributions are welcome. Please review `CONTRIBUTING.md` and use the issue/PR templates in `.github/`.
+
 ## License
 
 MIT — see `LICENSE`.
