@@ -23,6 +23,7 @@
 	color: #03195f;
 	cursor: pointer;
 	text-align: left;
+	transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .ldrj-hbda-icon-before .ldrj-hbda-trigger {
@@ -58,6 +59,13 @@
 	justify-content: center;
 	align-items: center;
 	transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.ldrj-hbda-icon svg {
+	width: 1em;
+	height: 1em;
+	display: block;
+	fill: currentColor;
 }
 
 .ldrj-hbda-icon-expand,

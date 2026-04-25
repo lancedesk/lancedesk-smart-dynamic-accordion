@@ -685,6 +685,17 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'ldrj_hbda_trigger_bg_color_normal',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-trigger' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
 			'ldrj_hbda_icon_color_normal',
 			array(
 				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
@@ -717,6 +728,17 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'ldrj_hbda_trigger_bg_color_hover',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
 			'ldrj_hbda_icon_color_hover',
 			array(
 				'label'     => esc_html__( 'Icon Color', 'lancedesk-smart-dynamic-accordion' ),
@@ -743,6 +765,17 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .ldrj-hbda-item.is-open .ldrj-hbda-trigger-text' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_trigger_bg_color_active',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-item.is-open .ldrj-hbda-trigger' => 'background-color: {{VALUE}};',
 				),
 			)
 		);
@@ -1171,6 +1204,15 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$markup = ob_get_clean();
 
 		if ( ! is_string( $markup ) || '' === $markup ) {
+			return esc_html( $fallback );
+		}
+
+		/*
+		 * Frontend theme stacks occasionally miss icon-font assets, which makes
+		 * <i class="eicon-..."> render as blank. Prefer SVG markup and fallback
+		 * to text symbols when only font-icon markup is returned.
+		 */
+		if ( false === strpos( $markup, '<svg' ) ) {
 			return esc_html( $fallback );
 		}
 
