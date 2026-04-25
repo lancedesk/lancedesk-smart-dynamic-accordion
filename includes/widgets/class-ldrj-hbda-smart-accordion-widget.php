@@ -891,6 +891,26 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
+		$this->add_responsive_control(
+			'ldrj_hbda_icon_thickness',
+			array(
+				'label'      => esc_html__( 'Thickness', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min'  => 0,
+						'max'  => 4,
+						'step' => 0.1,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-icon svg' => 'stroke: currentColor; stroke-width: {{SIZE}}{{UNIT}}; paint-order: stroke fill;',
+					'{{WRAPPER}} .ldrj-hbda-icon-fallback' => 'text-shadow: 0 0 {{SIZE}}{{UNIT}} currentColor;',
+				),
+			)
+		);
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			array(

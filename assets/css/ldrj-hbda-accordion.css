@@ -66,6 +66,9 @@
 	height: 1em;
 	display: block;
 	fill: currentColor;
+	stroke: currentColor;
+	stroke-width: 0;
+	paint-order: stroke fill;
 }
 
 .ldrj-hbda-icon-expand,
