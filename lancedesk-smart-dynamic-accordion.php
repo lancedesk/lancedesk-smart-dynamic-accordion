@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LanceDesk Smart Dynamic Accordion for Elementor
  * Description: A secure, modular Elementor accordion widget with manual and dynamic post-based content sources.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Lance Desk
  * Author URI: https://lancedesk.com
  * Text Domain: lancedesk-smart-dynamic-accordion
@@ -160,7 +160,7 @@ if ( class_exists( '\LanceDesk\HBDA\Plugin', false ) ) {
 }
 
 if ( ! defined( 'LDRJ_HBDA_VERSION' ) ) {
-	define( 'LDRJ_HBDA_VERSION', '1.0.1' );
+	define( 'LDRJ_HBDA_VERSION', '1.0.2' );
 }
 
 if ( ! defined( 'LDRJ_HBDA_PLUGIN_FILE' ) ) {

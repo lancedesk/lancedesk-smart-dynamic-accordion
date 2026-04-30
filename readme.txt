@@ -4,7 +4,7 @@ Tags: elementor, accordion, faq, dynamic content, widget
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -47,6 +47,11 @@ Yes. Select any public post type in Dynamic mode.
 Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 
 == Changelog ==
+
+= 1.0.2 =
+* Fix long title wrapping in accordion triggers to prevent horizontal overflow on mobile.
+* Keep expand/collapse icons aligned in a stable column for long multi-line titles.
+* Add duplicate-plugin activation and runtime conflict guards with clear admin notices.
 
 = 1.0.0 =
 * Initial release.
