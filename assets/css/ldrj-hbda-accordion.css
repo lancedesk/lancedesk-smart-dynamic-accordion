@@ -17,6 +17,7 @@
 	justify-content: space-between;
 	gap: 18px;
 	width: 100%;
+	min-width: 0;
 	padding: 20px 0;
 	border: 0;
 	background: transparent;
@@ -41,8 +42,13 @@
 }
 
 .ldrj-hbda-trigger-text {
+	flex: 1 1 auto;
+	min-width: 0;
 	font-weight: 700;
 	line-height: 1.35;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .ldrj-hbda-trigger:hover .ldrj-hbda-trigger-text,
@@ -51,6 +57,7 @@
 }
 
 .ldrj-hbda-icon {
+	flex: 0 0 auto;
 	font-size: 28px;
 	line-height: 1;
 	font-weight: 400;
