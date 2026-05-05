@@ -1,8 +1,17 @@
 .ldrj-hbda-accordion {
+	display: block;
 	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
 }
 
 .ldrj-hbda-item {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
 	border-top: 1px solid #acb2cf;
 	border-bottom: 1px solid #acb2cf;
 }
@@ -114,13 +123,28 @@
 }
 
 .ldrj-hbda-content-wrap {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
+	overflow: hidden;
 	padding: 0 0 16px;
 }
 
+.ldrj-hbda-content-wrap:not([hidden]) {
+	display: block;
+}
+
 .ldrj-hbda-content {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
 	font-size: 16px;
 	line-height: 1.65;
 	color: #1f2937;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .ldrj-hbda-content p:last-child {
