@@ -4,7 +4,7 @@ Tags: elementor, accordion, faq, dynamic content, widget
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.5
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -47,6 +47,13 @@ Yes. Select any public post type in Dynamic mode.
 Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 
 == Changelog ==
+
+= 1.0.5 =
+* Add optional dividers toggle (off by default) with Elementor border controls for width, color, and style.
+* Fix divider styles so Elementor controls apply correctly (remove hardcoded CSS overrides).
+* Add title padding and content background color style controls.
+* Fix expand/collapse icon picker compatibility in Elementor 4.x.
+* Restore font-icon rendering and remove unsupported Icons_Manager enqueue call that caused fatal errors.
 
 = 1.0.2 =
 * Fix long title wrapping in accordion triggers to prevent horizontal overflow on mobile.

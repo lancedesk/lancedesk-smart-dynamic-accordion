@@ -20,7 +20,7 @@ Secure, modular, and Elementor-native accordion widget for WordPress with both m
 - Elementor-native controls:
   - expand/collapse icons + icon position
   - normal/hover/active state colors
-  - typography, spacing, divider color, content border/padding
+  - typography, spacing, optional dividers, title/content padding, content background
 - Optional dynamic "Read more" links:
   - custom label
   - open in new tab

@@ -191,23 +191,11 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$this->add_control(
 			'ldrj_hbda_expand_icon',
 			array(
-				'label'       => esc_html__( 'Expand Icon', 'lancedesk-smart-dynamic-accordion' ),
-				'type'        => Controls_Manager::ICONS,
-				'default'     => array(
-					'value'   => 'eicon-plus',
-					'library' => 'eicons',
-				),
-				'recommended' => array(
-					'eicons' => array(
-						'plus',
-						'chevron-down',
-						'arrow-down',
-					),
-					'fa-solid' => array(
-						'plus',
-						'chevron-down',
-						'caret-down',
-					),
+				'label'   => esc_html__( 'Expand Icon', 'lancedesk-smart-dynamic-accordion' ),
+				'type'    => Controls_Manager::ICONS,
+				'default' => array(
+					'value'   => 'fas fa-plus',
+					'library' => 'fa-solid',
 				),
 			)
 		);
@@ -215,23 +203,11 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$this->add_control(
 			'ldrj_hbda_collapse_icon',
 			array(
-				'label'       => esc_html__( 'Collapse Icon', 'lancedesk-smart-dynamic-accordion' ),
-				'type'        => Controls_Manager::ICONS,
-				'default'     => array(
-					'value'   => 'eicon-minus',
-					'library' => 'eicons',
-				),
-				'recommended' => array(
-					'eicons' => array(
-						'minus',
-						'chevron-up',
-						'arrow-up',
-					),
-					'fa-solid' => array(
-						'minus',
-						'times',
-						'chevron-up',
-					),
+				'label'   => esc_html__( 'Collapse Icon', 'lancedesk-smart-dynamic-accordion' ),
+				'type'    => Controls_Manager::ICONS,
+				'default' => array(
+					'value'   => 'fas fa-minus',
+					'library' => 'fa-solid',
 				),
 			)
 		);
@@ -638,13 +614,45 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
-			'ldrj_hbda_border_color',
+			'ldrj_hbda_show_dividers',
 			array(
-				'label'     => esc_html__( 'Divider Color', 'lancedesk-smart-dynamic-accordion' ),
-				'type'      => Controls_Manager::COLOR,
-				'default'   => '#acb2cf',
-				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-item' => 'border-top-color: {{VALUE}}; border-bottom-color: {{VALUE}};',
+				'label'        => esc_html__( 'Show Dividers', 'lancedesk-smart-dynamic-accordion' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'lancedesk-smart-dynamic-accordion' ),
+				'label_off'    => esc_html__( 'No', 'lancedesk-smart-dynamic-accordion' ),
+				'return_value' => 'yes',
+				'default'      => '',
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			array(
+				'name'      => 'ldrj_hbda_divider_border',
+				'label'     => esc_html__( 'Divider', 'lancedesk-smart-dynamic-accordion' ),
+				'selector'  => '{{WRAPPER}} .ldrj-hbda-has-dividers .ldrj-hbda-item',
+				'condition' => array(
+					'ldrj_hbda_show_dividers' => 'yes',
+				),
+				'fields_options' => array(
+					'width'  => array(
+						'label'   => esc_html__( 'Divider Width', 'lancedesk-smart-dynamic-accordion' ),
+						'default' => array(
+							'top'      => '1',
+							'right'    => '0',
+							'bottom'   => '1',
+							'left'     => '0',
+							'unit'     => 'px',
+							'isLinked' => false,
+						),
+					),
+					'color'  => array(
+						'label'   => esc_html__( 'Divider Color', 'lancedesk-smart-dynamic-accordion' ),
+						'default' => '#acb2cf',
+					),
+					'border' => array(
+						'default' => 'solid',
+					),
 				),
 			)
 		);
@@ -774,6 +782,26 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$this->end_controls_tab();
 		$this->end_controls_tabs();
 
+		$this->add_responsive_control(
+			'ldrj_hbda_title_padding',
+			array(
+				'label'      => esc_html__( 'Title Padding', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%', 'em' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-trigger' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'default'    => array(
+					'top'      => 20,
+					'right'    => 0,
+					'bottom'   => 20,
+					'left'     => 0,
+					'unit'     => 'px',
+					'isLinked' => false,
+				),
+			)
+		);
+
 		$this->add_control(
 			'ldrj_hbda_content_heading',
 			array(
@@ -800,6 +828,17 @@ class Smart_Accordion_Widget extends Widget_Base {
 			array(
 				'name'     => 'ldrj_hbda_content_typography',
 				'selector' => '{{WRAPPER}} .ldrj-hbda-content',
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_content_bg_color',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-content-wrap' => 'background-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -1015,9 +1054,13 @@ class Smart_Accordion_Widget extends Widget_Base {
 			return;
 		}
 
+		$show_dividers   = isset( $settings['ldrj_hbda_show_dividers'] ) && 'yes' === $settings['ldrj_hbda_show_dividers'];
 		$wrapper_classes = 'ldrj-hbda-accordion ldrj-hbda-icon-' . $icon_pos;
 		if ( $multi_open ) {
 			$wrapper_classes .= ' ldrj-hbda-multi-open';
+		}
+		if ( $show_dividers ) {
+			$wrapper_classes .= ' ldrj-hbda-has-dividers';
 		}
 
 		echo '<div class="' . esc_attr( $wrapper_classes ) . '" data-multi-open="' . esc_attr( $multi_open ? 'yes' : 'no' ) . '">';
@@ -1297,16 +1340,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 		$markup = ob_get_clean();
 
-		if ( ! is_string( $markup ) || '' === $markup ) {
-			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
-		}
-
-		/*
-		 * Frontend theme stacks occasionally miss icon-font assets, which makes
-		 * <i class="eicon-..."> render as blank. Prefer SVG markup and fallback
-		 * to text symbols when only font-icon markup is returned.
-		 */
-		if ( false === strpos( $markup, '<svg' ) ) {
+		if ( ! is_string( $markup ) || '' === trim( $markup ) ) {
 			return '<span class="ldrj-hbda-icon-fallback">' . esc_html( $fallback ) . '</span>';
 		}
 

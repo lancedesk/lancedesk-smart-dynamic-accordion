@@ -12,12 +12,19 @@
 	max-width: 100%;
 	min-width: 0;
 	box-sizing: border-box;
-	border-top: 1px solid #acb2cf;
-	border-bottom: 1px solid #acb2cf;
+	border-top: 0;
+	border-bottom: 0;
 }
 
-.ldrj-hbda-item + .ldrj-hbda-item {
-	border-top: 0;
+/* Divider look (width/color/style) comes from Elementor style controls only. */
+.ldrj-hbda-has-dividers .ldrj-hbda-item {
+	border-left: 0;
+	border-right: 0;
+}
+
+.ldrj-hbda-has-dividers .ldrj-hbda-item + .ldrj-hbda-item {
+	border-top-width: 0;
+	border-top-style: none;
 }
 
 /* Scope-reset trigger button so theme-wide button rules do not leak in. */
