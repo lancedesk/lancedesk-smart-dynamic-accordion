@@ -4,7 +4,7 @@ Tags: elementor, accordion, faq, dynamic content, widget
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.7
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -47,6 +47,12 @@ Yes. Select any public post type in Dynamic mode.
 Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 
 == Changelog ==
+
+= 1.0.7 =
+* Intelligent dividers: single line between items (no doubled 4px gaps from top+bottom borders).
+* Advanced divider options: optional border at top and border at bottom toggles.
+* Fix title padding and background resetting on hover/focus/active states.
+* Replace per-item border group with dedicated divider color, width, and style controls.
 
 = 1.0.5 =
 * Add optional dividers toggle (off by default) with Elementor border controls for width, color, and style.

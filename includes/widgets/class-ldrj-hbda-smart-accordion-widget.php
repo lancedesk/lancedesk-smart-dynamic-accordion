@@ -625,34 +625,101 @@ class Smart_Accordion_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_group_control(
-			Group_Control_Border::get_type(),
+		$this->add_control(
+			'ldrj_hbda_divider_color',
 			array(
-				'name'      => 'ldrj_hbda_divider_border',
-				'label'     => esc_html__( 'Divider', 'lancedesk-smart-dynamic-accordion' ),
-				'selector'  => '{{WRAPPER}} .ldrj-hbda-has-dividers .ldrj-hbda-item',
+				'label'     => esc_html__( 'Divider Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#acb2cf',
+				'selectors' => $this->ldrj_hbda_get_divider_selectors( 'border-{{SIDE}}-color: {{VALUE}};' ),
 				'condition' => array(
 					'ldrj_hbda_show_dividers' => 'yes',
 				),
-				'fields_options' => array(
-					'width'  => array(
-						'label'   => esc_html__( 'Divider Width', 'lancedesk-smart-dynamic-accordion' ),
-						'default' => array(
-							'top'      => '1',
-							'right'    => '0',
-							'bottom'   => '1',
-							'left'     => '0',
-							'unit'     => 'px',
-							'isLinked' => false,
-						),
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_divider_width',
+			array(
+				'label'      => esc_html__( 'Divider Width', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 10,
 					),
-					'color'  => array(
-						'label'   => esc_html__( 'Divider Color', 'lancedesk-smart-dynamic-accordion' ),
-						'default' => '#acb2cf',
-					),
-					'border' => array(
-						'default' => 'solid',
-					),
+				),
+				'default'    => array(
+					'size' => 1,
+					'unit' => 'px',
+				),
+				'selectors'  => $this->ldrj_hbda_get_divider_selectors( 'border-{{SIDE}}-width: {{SIZE}}{{UNIT}};' ),
+				'condition'  => array(
+					'ldrj_hbda_show_dividers' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_divider_style',
+			array(
+				'label'     => esc_html__( 'Divider Style', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'solid',
+				'options'   => array(
+					'solid'  => esc_html__( 'Solid', 'lancedesk-smart-dynamic-accordion' ),
+					'dashed' => esc_html__( 'Dashed', 'lancedesk-smart-dynamic-accordion' ),
+					'dotted' => esc_html__( 'Dotted', 'lancedesk-smart-dynamic-accordion' ),
+					'double' => esc_html__( 'Double', 'lancedesk-smart-dynamic-accordion' ),
+				),
+				'selectors' => $this->ldrj_hbda_get_divider_selectors( 'border-{{SIDE}}-style: {{VALUE}};' ),
+				'condition' => array(
+					'ldrj_hbda_show_dividers' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_divider_advanced_heading',
+			array(
+				'label'     => esc_html__( 'Advanced', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					'ldrj_hbda_show_dividers' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_divider_border_top',
+			array(
+				'label'        => esc_html__( 'Border at Top', 'lancedesk-smart-dynamic-accordion' ),
+				'description'  => esc_html__( 'Adds a line above the first accordion item only.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'lancedesk-smart-dynamic-accordion' ),
+				'label_off'    => esc_html__( 'No', 'lancedesk-smart-dynamic-accordion' ),
+				'return_value' => 'yes',
+				'default'      => '',
+				'condition'    => array(
+					'ldrj_hbda_show_dividers' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_divider_border_bottom',
+			array(
+				'label'        => esc_html__( 'Border at Bottom', 'lancedesk-smart-dynamic-accordion' ),
+				'description'  => esc_html__( 'Adds a line below the last accordion item only.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'lancedesk-smart-dynamic-accordion' ),
+				'label_off'    => esc_html__( 'No', 'lancedesk-smart-dynamic-accordion' ),
+				'return_value' => 'yes',
+				'default'      => '',
+				'condition'    => array(
+					'ldrj_hbda_show_dividers' => 'yes',
 				),
 			)
 		);
@@ -743,7 +810,9 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover'  => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:focus'  => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:active' => 'background-color: {{VALUE}};',
 				),
 			)
 		);
@@ -789,7 +858,10 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => array( 'px', '%', 'em' ),
 				'selectors'  => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger'        => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover'  => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:focus'  => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:active' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				),
 				'default'    => array(
 					'top'      => 20,
@@ -1038,6 +1110,29 @@ class Smart_Accordion_Widget extends Widget_Base {
 	}
 
 	/**
+	 * Build Elementor selectors for intelligent single-line dividers.
+	 *
+	 * Between items: bottom border on all items except the last (one line per gap).
+	 * Top edge: optional top border on the first item only.
+	 * Bottom edge: optional bottom border on the last item only.
+	 *
+	 * @param string $property_css CSS declarations with {{SIDE}} placeholder (top|bottom).
+	 *
+	 * @return array<string, string>
+	 */
+	private function ldrj_hbda_get_divider_selectors( string $property_css ): array {
+		$between_rule = str_replace( '{{SIDE}}', 'bottom', $property_css );
+		$top_rule     = str_replace( '{{SIDE}}', 'top', $property_css );
+		$bottom_rule  = str_replace( '{{SIDE}}', 'bottom', $property_css );
+
+		return array(
+			'{{WRAPPER}} .ldrj-hbda-has-dividers .ldrj-hbda-item:not(:last-child)' => $between_rule,
+			'{{WRAPPER}} .ldrj-hbda-has-dividers.ldrj-hbda-divider-top .ldrj-hbda-item:first-child' => $top_rule,
+			'{{WRAPPER}} .ldrj-hbda-has-dividers.ldrj-hbda-divider-bottom .ldrj-hbda-item:last-child' => $bottom_rule,
+		);
+	}
+
+	/**
 	 * Render widget output.
 	 *
 	 * @return void
@@ -1061,6 +1156,12 @@ class Smart_Accordion_Widget extends Widget_Base {
 		}
 		if ( $show_dividers ) {
 			$wrapper_classes .= ' ldrj-hbda-has-dividers';
+			if ( isset( $settings['ldrj_hbda_divider_border_top'] ) && 'yes' === $settings['ldrj_hbda_divider_border_top'] ) {
+				$wrapper_classes .= ' ldrj-hbda-divider-top';
+			}
+			if ( isset( $settings['ldrj_hbda_divider_border_bottom'] ) && 'yes' === $settings['ldrj_hbda_divider_border_bottom'] ) {
+				$wrapper_classes .= ' ldrj-hbda-divider-bottom';
+			}
 		}
 
 		echo '<div class="' . esc_attr( $wrapper_classes ) . '" data-multi-open="' . esc_attr( $multi_open ? 'yes' : 'no' ) . '">';

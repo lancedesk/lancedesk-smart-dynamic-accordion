@@ -16,15 +16,12 @@
 	border-bottom: 0;
 }
 
-/* Divider look (width/color/style) comes from Elementor style controls only. */
+/* Divider width/color/style come from Elementor; only single-edge lines are drawn. */
 .ldrj-hbda-has-dividers .ldrj-hbda-item {
 	border-left: 0;
 	border-right: 0;
-}
-
-.ldrj-hbda-has-dividers .ldrj-hbda-item + .ldrj-hbda-item {
-	border-top-width: 0;
-	border-top-style: none;
+	border-top: 0;
+	border-bottom: 0;
 }
 
 /* Scope-reset trigger button so theme-wide button rules do not leak in. */
@@ -40,15 +37,12 @@
 	min-width: 0;
 	box-sizing: border-box;
 	white-space: normal;
-	padding: 20px 0;
 	border: 0;
 	border-radius: 0;
-	background: transparent;
-	color: #03195f;
 	cursor: pointer;
 	text-align: left;
 	text-decoration: none;
-	transition: color 0.2s ease, background-color 0.2s ease;
+	transition: color 0.2s ease, background-color 0.2s ease, padding 0.2s ease;
 }
 
 .ldrj-hbda-icon-before .ldrj-hbda-trigger {
