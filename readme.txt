@@ -4,7 +4,7 @@ Tags: elementor, accordion, faq, dynamic content, widget
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -16,6 +16,8 @@ LanceDesk Smart Dynamic Accordion for Elementor provides a flexible accordion wi
 
 * Manual repeater mode for FAQ and custom content.
 * Dynamic mode from any public post type.
+* Optional category and tag filters with AND/OR relation.
+* Load more via button (with remaining count) or infinite scroll.
 * Dynamic title/content mapping from post fields or custom meta.
 * Smart rendering for HTML and image URL content.
 * Optional read-more link controls (new tab and nofollow).
@@ -47,6 +49,12 @@ Yes. Select any public post type in Dynamic mode.
 Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 
 == Changelog ==
+
+= 1.0.8 =
+* Add optional category and tag filters with AND/OR relation for dynamic queries.
+* Add load-more support via show-more button or infinite scroll when item count is limited.
+* Add full Elementor style controls for the load-more button (colors, typography, spacing, alignment).
+* Extract shared query logic and secure AJAX load-more endpoint with nonce verification.
 
 = 1.0.7 =
 * Intelligent dividers: single line between items (no doubled 4px gaps from top+bottom borders).

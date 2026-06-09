@@ -96,6 +96,8 @@ final class Plugin {
 	 * @return void
 	 */
 	private function ldrj_hbda_load_files(): void {
+		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-query.php';
+		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-ajax.php';
 		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/widgets/class-ldrj-hbda-smart-accordion-widget.php';
 	}
 
@@ -123,6 +125,7 @@ final class Plugin {
 		add_action( 'elementor/elements/categories_registered', array( $this, 'ldrj_hbda_register_elementor_category' ) );
 		add_action( 'elementor/widgets/register', array( $this, 'ldrj_hbda_register_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'ldrj_hbda_register_frontend_assets' ) );
+		Ajax::ldrj_hbda_register();
 	}
 
 	/**
@@ -161,6 +164,15 @@ final class Plugin {
 			array(),
 			LDRJ_HBDA_VERSION,
 			true
+		);
+
+		wp_localize_script(
+			'ldrj-hbda-accordion',
+			'ldrjHbdaAjax',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'ldrj_hbda_load_more' ),
+			)
 		);
 	}
 

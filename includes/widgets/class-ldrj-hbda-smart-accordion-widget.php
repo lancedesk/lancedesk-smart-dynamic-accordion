@@ -13,6 +13,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Icons_Manager;
 use Elementor\Repeater;
 use Elementor\Widget_Base;
+use LanceDesk\HBDA\Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -94,6 +95,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 	protected function register_controls(): void {
 		$this->ldrj_hbda_register_content_controls();
 		$this->ldrj_hbda_register_style_controls();
+		$this->ldrj_hbda_register_load_more_style_controls();
 		$this->ldrj_hbda_register_icon_style_controls();
 	}
 
@@ -265,6 +267,82 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'ldrj_hbda_enable_load_more',
+			array(
+				'label'        => esc_html__( 'Enable Load More', 'lancedesk-smart-dynamic-accordion' ),
+				'description'  => esc_html__( 'When more items match the query than the initial count, reveal additional items on demand.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'condition'    => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_mode',
+			array(
+				'label'     => esc_html__( 'Load More Mode', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'button',
+				'options'   => array(
+					'button'          => esc_html__( 'Show More Button', 'lancedesk-smart-dynamic-accordion' ),
+					'infinite_scroll' => esc_html__( 'Infinite Scroll', 'lancedesk-smart-dynamic-accordion' ),
+				),
+				'condition' => array(
+					'ldrj_hbda_source_mode'      => 'dynamic',
+					'ldrj_hbda_enable_load_more' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_batch',
+			array(
+				'label'       => esc_html__( 'Items Per Load', 'lancedesk-smart-dynamic-accordion' ),
+				'description' => esc_html__( 'How many additional items to reveal each time. Defaults to the initial items count when empty.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'        => Controls_Manager::NUMBER,
+				'min'         => 1,
+				'max'         => 50,
+				'default'     => 6,
+				'condition'   => array(
+					'ldrj_hbda_source_mode'      => 'dynamic',
+					'ldrj_hbda_enable_load_more' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_button_text',
+			array(
+				'label'       => esc_html__( 'Show More Button Text', 'lancedesk-smart-dynamic-accordion' ),
+				'description' => esc_html__( 'Use %d as a placeholder for the remaining item count.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'        => Controls_Manager::TEXT,
+				'default'     => esc_html__( 'Show %d more', 'lancedesk-smart-dynamic-accordion' ),
+				'label_block' => true,
+				'condition'   => array(
+					'ldrj_hbda_source_mode'      => 'dynamic',
+					'ldrj_hbda_enable_load_more' => 'yes',
+					'ldrj_hbda_load_more_mode'   => 'button',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_loading_text',
+			array(
+				'label'     => esc_html__( 'Loading Text', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::TEXT,
+				'default'   => esc_html__( 'Loading…', 'lancedesk-smart-dynamic-accordion' ),
+				'condition' => array(
+					'ldrj_hbda_source_mode'      => 'dynamic',
+					'ldrj_hbda_enable_load_more' => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
 			'ldrj_hbda_offset',
 			array(
 				'label'     => esc_html__( 'Offset', 'lancedesk-smart-dynamic-accordion' ),
@@ -338,10 +416,82 @@ class Smart_Accordion_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'ldrj_hbda_filter_heading',
+			array(
+				'label'     => esc_html__( 'Taxonomy Filters', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$default_post_type = 'post';
+
+		$this->add_control(
+			'ldrj_hbda_category_terms',
+			array(
+				'label'       => esc_html__( 'Categories', 'lancedesk-smart-dynamic-accordion' ),
+				'description' => esc_html__( 'Optional. Filter by one or more category-like terms for the selected post type.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'        => Controls_Manager::SELECT2,
+				'options'     => Query::ldrj_hbda_get_taxonomy_term_options( $default_post_type, true ),
+				'multiple'    => true,
+				'label_block' => true,
+				'condition'   => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_tag_terms',
+			array(
+				'label'       => esc_html__( 'Tags', 'lancedesk-smart-dynamic-accordion' ),
+				'description' => esc_html__( 'Optional. Filter by one or more tag-like terms for the selected post type.', 'lancedesk-smart-dynamic-accordion' ),
+				'type'        => Controls_Manager::SELECT2,
+				'options'     => Query::ldrj_hbda_get_taxonomy_term_options( $default_post_type, false ),
+				'multiple'    => true,
+				'label_block' => true,
+				'condition'   => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_taxonomy_relation',
+			array(
+				'label'     => esc_html__( 'Filter Relation', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'AND',
+				'options'   => array(
+					'AND' => esc_html__( 'Match All Selected Filters', 'lancedesk-smart-dynamic-accordion' ),
+					'OR'  => esc_html__( 'Match Any Selected Filter', 'lancedesk-smart-dynamic-accordion' ),
+				),
+				'condition' => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_advanced_tax_heading',
+			array(
+				'label'     => esc_html__( 'Advanced Taxonomy', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					'ldrj_hbda_source_mode' => 'dynamic',
+				),
+			)
+		);
+
+		$this->add_control(
 			'ldrj_hbda_taxonomy',
 			array(
-				'label'       => esc_html__( 'Taxonomy Slug', 'lancedesk-smart-dynamic-accordion' ),
-				'description' => esc_html__( 'Example: category, post_tag, product_cat', 'lancedesk-smart-dynamic-accordion' ),
+				'label'       => esc_html__( 'Custom Taxonomy Slug', 'lancedesk-smart-dynamic-accordion' ),
+				'description' => esc_html__( 'Optional. Example: product_cat, faq_topic', 'lancedesk-smart-dynamic-accordion' ),
 				'type'        => Controls_Manager::TEXT,
 				'label_block' => true,
 				'condition'   => array(
@@ -353,7 +503,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$this->add_control(
 			'ldrj_hbda_tax_terms',
 			array(
-				'label'       => esc_html__( 'Taxonomy Terms', 'lancedesk-smart-dynamic-accordion' ),
+				'label'       => esc_html__( 'Custom Taxonomy Terms', 'lancedesk-smart-dynamic-accordion' ),
 				'description' => esc_html__( 'Comma-separated term slugs or IDs', 'lancedesk-smart-dynamic-accordion' ),
 				'type'        => Controls_Manager::TEXT,
 				'label_block' => true,
@@ -366,7 +516,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 		$this->add_control(
 			'ldrj_hbda_tax_field',
 			array(
-				'label'     => esc_html__( 'Taxonomy Term Type', 'lancedesk-smart-dynamic-accordion' ),
+				'label'     => esc_html__( 'Custom Taxonomy Term Type', 'lancedesk-smart-dynamic-accordion' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'slug',
 				'options'   => array(
@@ -983,6 +1133,213 @@ class Smart_Accordion_Widget extends Widget_Base {
 	}
 
 	/**
+	 * Load-more button style controls.
+	 *
+	 * @return void
+	 */
+	private function ldrj_hbda_register_load_more_style_controls(): void {
+		$this->start_controls_section(
+			'ldrj_hbda_section_style_load_more',
+			array(
+				'label'     => esc_html__( 'Load More Button', 'lancedesk-smart-dynamic-accordion' ),
+				'tab'       => Controls_Manager::TAB_STYLE,
+				'condition' => array(
+					'ldrj_hbda_source_mode'      => 'dynamic',
+					'ldrj_hbda_enable_load_more' => 'yes',
+					'ldrj_hbda_load_more_mode'   => 'button',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_load_more_align',
+			array(
+				'label'     => esc_html__( 'Alignment', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => array(
+					'left'   => array(
+						'title' => esc_html__( 'Left', 'lancedesk-smart-dynamic-accordion' ),
+						'icon'  => 'eicon-text-align-left',
+					),
+					'center' => array(
+						'title' => esc_html__( 'Center', 'lancedesk-smart-dynamic-accordion' ),
+						'icon'  => 'eicon-text-align-center',
+					),
+					'right'  => array(
+						'title' => esc_html__( 'Right', 'lancedesk-smart-dynamic-accordion' ),
+						'icon'  => 'eicon-text-align-right',
+					),
+				),
+				'default'   => 'center',
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-wrap' => 'text-align: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_load_more_width',
+			array(
+				'label'      => esc_html__( 'Width', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 80,
+						'max' => 600,
+					),
+					'%'  => array(
+						'min' => 10,
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn' => 'width: {{SIZE}}{{UNIT}}; max-width: 100%;',
+				),
+			)
+		);
+
+		$this->start_controls_tabs( 'ldrj_hbda_load_more_state_tabs' );
+
+		$this->start_controls_tab(
+			'ldrj_hbda_load_more_state_normal',
+			array(
+				'label' => esc_html__( 'Normal', 'lancedesk-smart-dynamic-accordion' ),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_text_color',
+			array(
+				'label'     => esc_html__( 'Text Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#ffffff',
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_bg_color',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#03195f',
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'ldrj_hbda_load_more_state_hover',
+			array(
+				'label' => esc_html__( 'Hover', 'lancedesk-smart-dynamic-accordion' ),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_text_color_hover',
+			array(
+				'label'     => esc_html__( 'Text Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn:hover' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn:focus' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'ldrj_hbda_load_more_bg_color_hover',
+			array(
+				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn:hover' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn:focus' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'ldrj_hbda_load_more_typography',
+				'selector' => '{{WRAPPER}} .ldrj-hbda-load-more-btn',
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			array(
+				'name'     => 'ldrj_hbda_load_more_border',
+				'selector' => '{{WRAPPER}} .ldrj-hbda-load-more-btn',
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_load_more_border_radius',
+			array(
+				'label'      => esc_html__( 'Border Radius', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_load_more_padding',
+			array(
+				'label'      => esc_html__( 'Padding', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'default'    => array(
+					'top'      => 14,
+					'right'    => 28,
+					'bottom'   => 14,
+					'left'     => 28,
+					'unit'     => 'px',
+					'isLinked' => false,
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'ldrj_hbda_load_more_margin',
+			array(
+				'label'      => esc_html__( 'Margin', 'lancedesk-smart-dynamic-accordion' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .ldrj-hbda-load-more-wrap' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'default'    => array(
+					'top'      => 24,
+					'right'    => 0,
+					'bottom'   => 0,
+					'left'     => 0,
+					'unit'     => 'px',
+					'isLinked' => false,
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
 	 * Dedicated icon style controls.
 	 *
 	 * @return void
@@ -1149,6 +1506,8 @@ class Smart_Accordion_Widget extends Widget_Base {
 			return;
 		}
 
+		$load_more_config = $this->ldrj_hbda_get_load_more_config( $settings, count( $items ) );
+
 		$show_dividers   = isset( $settings['ldrj_hbda_show_dividers'] ) && 'yes' === $settings['ldrj_hbda_show_dividers'];
 		$wrapper_classes = 'ldrj-hbda-accordion ldrj-hbda-icon-' . $icon_pos;
 		if ( $multi_open ) {
@@ -1164,32 +1523,49 @@ class Smart_Accordion_Widget extends Widget_Base {
 			}
 		}
 
-		echo '<div class="' . esc_attr( $wrapper_classes ) . '" data-multi-open="' . esc_attr( $multi_open ? 'yes' : 'no' ) . '">';
+		$wrapper_attrs = array(
+			'class'            => $wrapper_classes,
+			'data-multi-open'  => $multi_open ? 'yes' : 'no',
+			'data-open-first'  => $open_first ? 'yes' : 'no',
+		);
+
+		if ( ! empty( $load_more_config['enabled'] ) ) {
+			$wrapper_attrs['class'] .= ' ldrj-hbda-has-load-more';
+			$wrapper_attrs['data-load-more'] = 'yes';
+			$wrapper_attrs['data-load-more-mode'] = esc_attr( (string) $load_more_config['mode'] );
+			$wrapper_attrs['data-widget-id'] = esc_attr( $this->get_id() );
+			$wrapper_attrs['data-offset'] = (string) (int) $load_more_config['offset'];
+			$wrapper_attrs['data-remaining'] = (string) (int) $load_more_config['remaining'];
+			$wrapper_attrs['data-settings'] = esc_attr( wp_json_encode( $this->ldrj_hbda_get_ajax_settings_payload( $settings ) ) );
+			$wrapper_attrs['data-loading-text'] = esc_attr( (string) $load_more_config['loading_text'] );
+			$wrapper_attrs['data-button-template'] = esc_attr( (string) $load_more_config['button_template'] );
+		}
+
+		echo '<div';
+		foreach ( $wrapper_attrs as $attr => $value ) {
+			echo ' ' . esc_attr( $attr ) . '="' . esc_attr( (string) $value ) . '"';
+		}
+		echo '>';
 
 		foreach ( $items as $index => $item ) {
-			$item_id     = 'ldrj-hbda-item-' . esc_attr( $this->get_id() . '-' . $index );
-			$is_expanded = $open_first && 0 === (int) $index;
-			$item_class  = 'ldrj-hbda-item';
+			$this->ldrj_hbda_render_item_markup( $item, (int) $index, $settings, $open_first && 0 === (int) $index );
+		}
 
-			if ( $is_expanded ) {
-				$item_class .= ' is-open';
+		if ( ! empty( $load_more_config['enabled'] ) ) {
+			if ( 'button' === $load_more_config['mode'] && $load_more_config['remaining'] > 0 ) {
+				echo '<div class="ldrj-hbda-load-more-wrap">';
+				echo '<button type="button" class="ldrj-hbda-load-more-btn" aria-live="polite">';
+				echo esc_html( $this->ldrj_hbda_format_load_more_label( (string) $load_more_config['button_template'], (int) $load_more_config['remaining'] ) );
+				echo '</button>';
+				echo '</div>';
 			}
 
-			echo '<div class="' . esc_attr( $item_class ) . '">';
-			echo '<button type="button" class="ldrj-hbda-trigger" aria-expanded="' . esc_attr( $is_expanded ? 'true' : 'false' ) . '" aria-controls="' . esc_attr( $item_id ) . '">';
-			echo '<span class="ldrj-hbda-trigger-text">' . esc_html( $item['title'] ) . '</span>';
-			echo '<span class="ldrj-hbda-icon" aria-hidden="true">';
-			echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
-			echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
-			echo '</span>';
-			echo '</button>';
-			echo '<div id="' . esc_attr( $item_id ) . '" class="ldrj-hbda-content-wrap" ' . ( $is_expanded ? '' : 'hidden' ) . '>';
-			echo '<div class="ldrj-hbda-content">' . wp_kses_post( $item['content'] ) . '</div>';
-			if ( ! empty( $item['url'] ) ) {
-				echo '<a class="ldrj-hbda-read-more" href="' . esc_url( $item['url'] ) . '"' . $this->ldrj_hbda_build_link_attributes( $item ) . '>' . esc_html( $item['read_more_label'] ) . '</a>';
+			if ( 'infinite_scroll' === $load_more_config['mode'] && $load_more_config['remaining'] > 0 ) {
+				echo '<div class="ldrj-hbda-load-more-sentinel" aria-hidden="true"></div>';
+				echo '<div class="ldrj-hbda-load-more-status" aria-live="polite" hidden>';
+				echo esc_html( (string) $load_more_config['loading_text'] );
+				echo '</div>';
 			}
-			echo '</div>';
-			echo '</div>';
 		}
 
 		echo '</div>';
@@ -1197,6 +1573,46 @@ class Smart_Accordion_Widget extends Widget_Base {
 		if ( $faq_schema ) {
 			$this->ldrj_hbda_render_faq_schema( $items, $settings );
 		}
+	}
+
+	/**
+	 * Render a single accordion item.
+	 *
+	 * @param array<string,string> $item Item data.
+	 * @param int                  $index Item index.
+	 * @param array<string,mixed>  $settings Widget settings.
+	 * @param bool|null            $force_open Optional explicit open state.
+	 *
+	 * @return void
+	 */
+	public function ldrj_hbda_render_item_markup( array $item, int $index, array $settings, ?bool $force_open = null, ?string $widget_id = null ): void {
+		$element_id = null !== $widget_id ? $widget_id : (string) $this->get_id();
+		$item_id    = 'ldrj-hbda-item-' . esc_attr( $element_id . '-' . $index );
+
+		if ( null === $force_open ) {
+			$force_open = isset( $settings['ldrj_hbda_open_first'] ) && 'yes' === $settings['ldrj_hbda_open_first'] && 0 === $index;
+		}
+
+		$item_class = 'ldrj-hbda-item';
+		if ( $force_open ) {
+			$item_class .= ' is-open';
+		}
+
+		echo '<div class="' . esc_attr( $item_class ) . '">';
+		echo '<button type="button" class="ldrj-hbda-trigger" aria-expanded="' . esc_attr( $force_open ? 'true' : 'false' ) . '" aria-controls="' . esc_attr( $item_id ) . '">';
+		echo '<span class="ldrj-hbda-trigger-text">' . esc_html( $item['title'] ) . '</span>';
+		echo '<span class="ldrj-hbda-icon" aria-hidden="true">';
+		echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
+		echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
+		echo '</span>';
+		echo '</button>';
+		echo '<div id="' . esc_attr( $item_id ) . '" class="ldrj-hbda-content-wrap" ' . ( $force_open ? '' : 'hidden' ) . '>';
+		echo '<div class="ldrj-hbda-content">' . wp_kses_post( $item['content'] ) . '</div>';
+		if ( ! empty( $item['url'] ) ) {
+			echo '<a class="ldrj-hbda-read-more" href="' . esc_url( $item['url'] ) . '"' . $this->ldrj_hbda_build_link_attributes( $item ) . '>' . esc_html( $item['read_more_label'] ) . '</a>';
+		}
+		echo '</div>';
+		echo '</div>';
 	}
 
 	/**
@@ -1243,174 +1659,211 @@ class Smart_Accordion_Widget extends Widget_Base {
 	 * @return array<int,array<string,string>>
 	 */
 	private function ldrj_hbda_get_dynamic_items( array $settings ): array {
-		$post_type      = isset( $settings['ldrj_hbda_post_type'] ) ? sanitize_key( $settings['ldrj_hbda_post_type'] ) : 'post';
 		$posts_per_page = isset( $settings['ldrj_hbda_posts_per_page'] ) ? absint( $settings['ldrj_hbda_posts_per_page'] ) : 6;
-		$order          = isset( $settings['ldrj_hbda_order'] ) && in_array( $settings['ldrj_hbda_order'], array( 'ASC', 'DESC' ), true ) ? $settings['ldrj_hbda_order'] : 'DESC';
-		$orderby        = isset( $settings['ldrj_hbda_orderby'] ) ? sanitize_key( $settings['ldrj_hbda_orderby'] ) : 'date';
-		$title_source   = isset( $settings['ldrj_hbda_title_source'] ) ? sanitize_key( $settings['ldrj_hbda_title_source'] ) : 'title';
-		$title_meta_key = isset( $settings['ldrj_hbda_title_meta_key'] ) ? sanitize_key( $settings['ldrj_hbda_title_meta_key'] ) : '';
-		$content_source = isset( $settings['ldrj_hbda_content_source'] ) ? sanitize_key( $settings['ldrj_hbda_content_source'] ) : 'content';
-		$meta_key       = isset( $settings['ldrj_hbda_meta_key'] ) ? sanitize_key( $settings['ldrj_hbda_meta_key'] ) : '';
-		$meta_format    = isset( $settings['ldrj_hbda_meta_value_format'] ) ? sanitize_key( $settings['ldrj_hbda_meta_value_format'] ) : 'auto';
 		$offset         = isset( $settings['ldrj_hbda_offset'] ) ? absint( $settings['ldrj_hbda_offset'] ) : 0;
-		$include_ids    = isset( $settings['ldrj_hbda_include_ids'] ) ? $this->ldrj_hbda_parse_csv_ids( (string) $settings['ldrj_hbda_include_ids'] ) : array();
-		$exclude_ids    = isset( $settings['ldrj_hbda_exclude_ids'] ) ? $this->ldrj_hbda_parse_csv_ids( (string) $settings['ldrj_hbda_exclude_ids'] ) : array();
-		$taxonomy       = isset( $settings['ldrj_hbda_taxonomy'] ) ? sanitize_key( $settings['ldrj_hbda_taxonomy'] ) : '';
-		$tax_terms_raw  = isset( $settings['ldrj_hbda_tax_terms'] ) ? (string) $settings['ldrj_hbda_tax_terms'] : '';
-		$tax_field      = isset( $settings['ldrj_hbda_tax_field'] ) && in_array( $settings['ldrj_hbda_tax_field'], array( 'slug', 'term_id' ), true ) ? $settings['ldrj_hbda_tax_field'] : 'slug';
-		$show_read_more = isset( $settings['ldrj_hbda_show_read_more'] ) && 'yes' === $settings['ldrj_hbda_show_read_more'];
-		$read_more_text = isset( $settings['ldrj_hbda_read_more_text'] ) ? sanitize_text_field( $settings['ldrj_hbda_read_more_text'] ) : esc_html__( 'Read more', 'lancedesk-smart-dynamic-accordion' );
-		$read_more_new_tab = isset( $settings['ldrj_hbda_read_more_new_tab'] ) && 'yes' === $settings['ldrj_hbda_read_more_new_tab'];
-		$read_more_nofollow = isset( $settings['ldrj_hbda_read_more_nofollow'] ) && 'yes' === $settings['ldrj_hbda_read_more_nofollow'];
-
-		$allowed_orderby = array( 'date', 'title', 'menu_order', 'rand' );
-		if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
-			$orderby = 'date';
-		}
 
 		if ( $posts_per_page < 1 ) {
 			$posts_per_page = 6;
 		}
 
-		$query_args = array(
-			'post_type'              => $post_type,
-			'post_status'            => 'publish',
-			'posts_per_page'         => $posts_per_page,
-			'orderby'                => $orderby,
-			'order'                  => $order,
-			'offset'                 => $offset,
-			'ignore_sticky_posts'    => true,
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		);
-
-		if ( ! empty( $include_ids ) ) {
-			$query_args['post__in'] = $include_ids;
-		}
-
-		if ( ! empty( $exclude_ids ) ) {
-			$query_args['post__not_in'] = $exclude_ids;
-		}
-
-		if ( '' !== $taxonomy && taxonomy_exists( $taxonomy ) && '' !== trim( $tax_terms_raw ) ) {
-			if ( 'term_id' === $tax_field ) {
-				$terms = $this->ldrj_hbda_parse_csv_ids( $tax_terms_raw );
-			} else {
-				$terms = $this->ldrj_hbda_parse_csv_slugs( $tax_terms_raw );
-			}
-
-			if ( ! empty( $terms ) ) {
-				$query_args['tax_query'] = array(
-					array(
-						'taxonomy' => $taxonomy,
-						'field'    => $tax_field,
-						'terms'    => $terms,
-					),
-				);
-			}
-		}
-
-		$posts = get_posts( $query_args );
-		$items = array();
-
-		global $post;
-		$original_post = $post;
-
-		foreach ( $posts as $query_post ) {
-			$post = $query_post;
-			setup_postdata( $post );
-
-			$title   = sanitize_text_field( get_the_title( $post ) );
-			$content = '';
-
-			if ( 'meta' === $title_source && '' !== $title_meta_key ) {
-				$raw_title = get_post_meta( $post->ID, $title_meta_key, true );
-				if ( is_scalar( $raw_title ) ) {
-					$title = sanitize_text_field( (string) $raw_title );
-				}
-			}
-
-			if ( 'excerpt' === $content_source ) {
-				$raw_excerpt = has_excerpt( $post ) ? $post->post_excerpt : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 35 );
-				$content     = wpautop( esc_html( $raw_excerpt ) );
-			} elseif ( 'meta' === $content_source && '' !== $meta_key ) {
-				$raw_meta = get_post_meta( $post->ID, $meta_key, true );
-				if ( is_scalar( $raw_meta ) ) {
-					$content = $this->ldrj_hbda_format_meta_content( (string) $raw_meta, $meta_format );
-				}
-			} else {
-				$content = apply_filters( 'the_content', get_the_content( null, false, $post ) );
-			}
-
-			if ( '' === $content && has_post_thumbnail( $post ) ) {
-				$content = wp_get_attachment_image( get_post_thumbnail_id( $post->ID ), 'large' );
-			}
-
-			if ( '' === $title && '' === trim( wp_strip_all_tags( $content ) ) ) {
-				continue;
-			}
-
-			$items[] = array(
-				'title'           => $title,
-				'content'         => $content,
-				'url'             => $show_read_more ? get_permalink( $post ) : '',
-				'read_more_label' => $read_more_text,
-				'read_more_new_tab' => $read_more_new_tab ? 'yes' : 'no',
-				'read_more_nofollow' => $read_more_nofollow ? 'yes' : 'no',
-			);
-		}
-
-		wp_reset_postdata();
-		$post = $original_post;
-
-		return $items;
+		return Query::ldrj_hbda_get_dynamic_items( $settings, $posts_per_page, $offset );
 	}
 
 	/**
-	 * Format dynamic meta value based on selected type.
+	 * Build load-more runtime config for frontend markup.
 	 *
-	 * @param string $raw_value Raw meta value.
-	 * @param string $meta_format Selected format.
+	 * @param array<string,mixed> $settings Widget settings.
+	 * @param int                 $loaded_count Number of initially rendered items.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private function ldrj_hbda_get_load_more_config( array $settings, int $loaded_count ): array {
+		$config = array(
+			'enabled'         => false,
+			'mode'            => 'button',
+			'offset'          => $loaded_count,
+			'remaining'       => 0,
+			'loading_text'    => esc_html__( 'Loading…', 'lancedesk-smart-dynamic-accordion' ),
+			'button_template' => esc_html__( 'Show %d more', 'lancedesk-smart-dynamic-accordion' ),
+		);
+
+		if ( ! isset( $settings['ldrj_hbda_source_mode'] ) || 'dynamic' !== $settings['ldrj_hbda_source_mode'] ) {
+			return $config;
+		}
+
+		if ( empty( $settings['ldrj_hbda_enable_load_more'] ) || 'yes' !== $settings['ldrj_hbda_enable_load_more'] ) {
+			return $config;
+		}
+
+		$total = Query::ldrj_hbda_count_posts( $settings );
+		$remaining = max( 0, $total - $loaded_count );
+
+		if ( $remaining < 1 ) {
+			return $config;
+		}
+
+		$config['enabled'] = true;
+		$config['mode']    = isset( $settings['ldrj_hbda_load_more_mode'] ) && 'infinite_scroll' === $settings['ldrj_hbda_load_more_mode'] ? 'infinite_scroll' : 'button';
+		$config['offset']  = $loaded_count;
+		$config['remaining'] = $remaining;
+
+		if ( ! empty( $settings['ldrj_hbda_load_more_loading_text'] ) ) {
+			$config['loading_text'] = sanitize_text_field( (string) $settings['ldrj_hbda_load_more_loading_text'] );
+		}
+
+		if ( ! empty( $settings['ldrj_hbda_load_more_button_text'] ) ) {
+			$config['button_template'] = sanitize_text_field( (string) $settings['ldrj_hbda_load_more_button_text'] );
+		}
+
+		return $config;
+	}
+
+	/**
+	 * Format load-more button label with remaining count placeholder.
+	 *
+	 * @param string $template Button text template.
+	 * @param int    $remaining Remaining item count.
 	 *
 	 * @return string
 	 */
-	private function ldrj_hbda_format_meta_content( string $raw_value, string $meta_format ): string {
-		$value = trim( $raw_value );
-
-		if ( '' === $value ) {
-			return '';
+	private function ldrj_hbda_format_load_more_label( string $template, int $remaining ): string {
+		if ( false !== strpos( $template, '%d' ) ) {
+			/* translators: %d: number of remaining accordion items. */
+			return sprintf( $template, max( 0, $remaining ) );
 		}
 
-		if ( 'image_url' === $meta_format ) {
-			$url = esc_url( $value );
-			if ( '' !== $url ) {
-				return '<img src="' . $url . '" alt="" loading="lazy" />';
+		if ( $remaining > 0 ) {
+			/* translators: %d: number of remaining accordion items. */
+			return $template . ' (' . sprintf( esc_html__( '%d remaining', 'lancedesk-smart-dynamic-accordion' ), $remaining ) . ')';
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Build sanitized settings payload for AJAX load-more requests.
+	 *
+	 * @param array<string,mixed> $settings Widget settings.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private function ldrj_hbda_get_ajax_settings_payload( array $settings ): array {
+		$keys = array(
+			'ldrj_hbda_post_type',
+			'ldrj_hbda_posts_per_page',
+			'ldrj_hbda_offset',
+			'ldrj_hbda_order',
+			'ldrj_hbda_orderby',
+			'ldrj_hbda_include_ids',
+			'ldrj_hbda_exclude_ids',
+			'ldrj_hbda_category_terms',
+			'ldrj_hbda_tag_terms',
+			'ldrj_hbda_taxonomy_relation',
+			'ldrj_hbda_taxonomy',
+			'ldrj_hbda_tax_terms',
+			'ldrj_hbda_tax_field',
+			'ldrj_hbda_title_source',
+			'ldrj_hbda_title_meta_key',
+			'ldrj_hbda_content_source',
+			'ldrj_hbda_meta_key',
+			'ldrj_hbda_meta_value_format',
+			'ldrj_hbda_show_read_more',
+			'ldrj_hbda_read_more_text',
+			'ldrj_hbda_read_more_new_tab',
+			'ldrj_hbda_read_more_nofollow',
+			'ldrj_hbda_load_more_batch',
+			'ldrj_hbda_expand_icon',
+			'ldrj_hbda_collapse_icon',
+			'ldrj_hbda_icon_render_mode',
+		);
+
+		$payload = array();
+		foreach ( $keys as $key ) {
+			if ( array_key_exists( $key, $settings ) ) {
+				$payload[ $key ] = $settings[ $key ];
 			}
-			return '';
 		}
 
-		if ( 'text' === $meta_format ) {
-			return wpautop( esc_html( $value ) );
-		}
+		return self::ldrj_hbda_sanitize_ajax_settings( $payload );
+	}
 
-		if ( 'html' === $meta_format ) {
-			return wp_kses_post( $value );
-		}
+	/**
+	 * Sanitize settings received through AJAX.
+	 *
+	 * @param array<string,mixed> $settings Raw settings.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function ldrj_hbda_sanitize_ajax_settings( array $settings ): array {
+		$sanitized = array(
+			'ldrj_hbda_post_type'          => isset( $settings['ldrj_hbda_post_type'] ) ? sanitize_key( (string) $settings['ldrj_hbda_post_type'] ) : 'post',
+			'ldrj_hbda_posts_per_page'     => isset( $settings['ldrj_hbda_posts_per_page'] ) ? absint( $settings['ldrj_hbda_posts_per_page'] ) : 6,
+			'ldrj_hbda_offset'             => isset( $settings['ldrj_hbda_offset'] ) ? absint( $settings['ldrj_hbda_offset'] ) : 0,
+			'ldrj_hbda_order'              => isset( $settings['ldrj_hbda_order'] ) && in_array( $settings['ldrj_hbda_order'], array( 'ASC', 'DESC' ), true ) ? $settings['ldrj_hbda_order'] : 'DESC',
+			'ldrj_hbda_orderby'            => isset( $settings['ldrj_hbda_orderby'] ) ? sanitize_key( (string) $settings['ldrj_hbda_orderby'] ) : 'date',
+			'ldrj_hbda_include_ids'        => isset( $settings['ldrj_hbda_include_ids'] ) ? sanitize_text_field( (string) $settings['ldrj_hbda_include_ids'] ) : '',
+			'ldrj_hbda_exclude_ids'        => isset( $settings['ldrj_hbda_exclude_ids'] ) ? sanitize_text_field( (string) $settings['ldrj_hbda_exclude_ids'] ) : '',
+			'ldrj_hbda_category_terms'     => array(),
+			'ldrj_hbda_tag_terms'          => array(),
+			'ldrj_hbda_taxonomy_relation'  => isset( $settings['ldrj_hbda_taxonomy_relation'] ) && 'OR' === $settings['ldrj_hbda_taxonomy_relation'] ? 'OR' : 'AND',
+			'ldrj_hbda_taxonomy'           => isset( $settings['ldrj_hbda_taxonomy'] ) ? sanitize_key( (string) $settings['ldrj_hbda_taxonomy'] ) : '',
+			'ldrj_hbda_tax_terms'          => isset( $settings['ldrj_hbda_tax_terms'] ) ? sanitize_text_field( (string) $settings['ldrj_hbda_tax_terms'] ) : '',
+			'ldrj_hbda_tax_field'          => isset( $settings['ldrj_hbda_tax_field'] ) && in_array( $settings['ldrj_hbda_tax_field'], array( 'slug', 'term_id' ), true ) ? $settings['ldrj_hbda_tax_field'] : 'slug',
+			'ldrj_hbda_title_source'       => isset( $settings['ldrj_hbda_title_source'] ) ? sanitize_key( (string) $settings['ldrj_hbda_title_source'] ) : 'title',
+			'ldrj_hbda_title_meta_key'     => isset( $settings['ldrj_hbda_title_meta_key'] ) ? sanitize_key( (string) $settings['ldrj_hbda_title_meta_key'] ) : '',
+			'ldrj_hbda_content_source'     => isset( $settings['ldrj_hbda_content_source'] ) ? sanitize_key( (string) $settings['ldrj_hbda_content_source'] ) : 'content',
+			'ldrj_hbda_meta_key'           => isset( $settings['ldrj_hbda_meta_key'] ) ? sanitize_key( (string) $settings['ldrj_hbda_meta_key'] ) : '',
+			'ldrj_hbda_meta_value_format'  => isset( $settings['ldrj_hbda_meta_value_format'] ) ? sanitize_key( (string) $settings['ldrj_hbda_meta_value_format'] ) : 'auto',
+			'ldrj_hbda_show_read_more'     => isset( $settings['ldrj_hbda_show_read_more'] ) && 'yes' === $settings['ldrj_hbda_show_read_more'] ? 'yes' : '',
+			'ldrj_hbda_read_more_text'     => isset( $settings['ldrj_hbda_read_more_text'] ) ? sanitize_text_field( (string) $settings['ldrj_hbda_read_more_text'] ) : esc_html__( 'Read more', 'lancedesk-smart-dynamic-accordion' ),
+			'ldrj_hbda_read_more_new_tab'  => isset( $settings['ldrj_hbda_read_more_new_tab'] ) && 'yes' === $settings['ldrj_hbda_read_more_new_tab'] ? 'yes' : '',
+			'ldrj_hbda_read_more_nofollow' => isset( $settings['ldrj_hbda_read_more_nofollow'] ) && 'yes' === $settings['ldrj_hbda_read_more_nofollow'] ? 'yes' : '',
+			'ldrj_hbda_load_more_batch'    => isset( $settings['ldrj_hbda_load_more_batch'] ) ? absint( $settings['ldrj_hbda_load_more_batch'] ) : 0,
+			'ldrj_hbda_icon_render_mode'   => isset( $settings['ldrj_hbda_icon_render_mode'] ) ? sanitize_key( (string) $settings['ldrj_hbda_icon_render_mode'] ) : 'auto',
+		);
 
-		// Auto mode detects images and html, then falls back to plain text.
-		if ( wp_http_validate_url( $value ) && preg_match( '/\.(jpg|jpeg|png|gif|webp|avif|svg)(\?.*)?$/i', $value ) ) {
-			$url = esc_url( $value );
-			if ( '' !== $url ) {
-				return '<img src="' . $url . '" alt="" loading="lazy" />';
+		if ( isset( $settings['ldrj_hbda_category_terms'] ) && is_array( $settings['ldrj_hbda_category_terms'] ) ) {
+			foreach ( $settings['ldrj_hbda_category_terms'] as $term_key ) {
+				$sanitized['ldrj_hbda_category_terms'][] = sanitize_text_field( (string) $term_key );
 			}
 		}
 
-		if ( $value !== wp_strip_all_tags( $value ) ) {
-			return wp_kses_post( $value );
+		if ( isset( $settings['ldrj_hbda_tag_terms'] ) && is_array( $settings['ldrj_hbda_tag_terms'] ) ) {
+			foreach ( $settings['ldrj_hbda_tag_terms'] as $term_key ) {
+				$sanitized['ldrj_hbda_tag_terms'][] = sanitize_text_field( (string) $term_key );
+			}
 		}
 
-		return wpautop( esc_html( $value ) );
+		if ( isset( $settings['ldrj_hbda_expand_icon'] ) && is_array( $settings['ldrj_hbda_expand_icon'] ) ) {
+			$sanitized['ldrj_hbda_expand_icon'] = self::ldrj_hbda_sanitize_icon_setting( $settings['ldrj_hbda_expand_icon'] );
+		}
+
+		if ( isset( $settings['ldrj_hbda_collapse_icon'] ) && is_array( $settings['ldrj_hbda_collapse_icon'] ) ) {
+			$sanitized['ldrj_hbda_collapse_icon'] = self::ldrj_hbda_sanitize_icon_setting( $settings['ldrj_hbda_collapse_icon'] );
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize Elementor icon control values for AJAX rendering.
+	 *
+	 * @param array<string,mixed> $icon_setting Icon control value.
+	 *
+	 * @return array<string,string>
+	 */
+	private static function ldrj_hbda_sanitize_icon_setting( array $icon_setting ): array {
+		$clean = array();
+
+		if ( isset( $icon_setting['value'] ) ) {
+			$clean['value'] = sanitize_text_field( (string) $icon_setting['value'] );
+		}
+
+		if ( isset( $icon_setting['library'] ) ) {
+			$clean['library'] = sanitize_key( (string) $icon_setting['library'] );
+		}
+
+		return $clean;
 	}
 
 	/**
@@ -1473,48 +1926,6 @@ class Smart_Accordion_Widget extends Widget_Base {
 		}
 
 		return $attributes;
-	}
-
-	/**
-	 * Parse comma-separated IDs safely.
-	 *
-	 * @param string $value Raw csv value.
-	 *
-	 * @return array<int,int>
-	 */
-	private function ldrj_hbda_parse_csv_ids( string $value ): array {
-		$parts = explode( ',', $value );
-		$ids   = array();
-
-		foreach ( $parts as $part ) {
-			$id = absint( trim( $part ) );
-			if ( $id > 0 ) {
-				$ids[] = $id;
-			}
-		}
-
-		return array_values( array_unique( $ids ) );
-	}
-
-	/**
-	 * Parse comma-separated slugs safely.
-	 *
-	 * @param string $value Raw csv value.
-	 *
-	 * @return array<int,string>
-	 */
-	private function ldrj_hbda_parse_csv_slugs( string $value ): array {
-		$parts = explode( ',', $value );
-		$out   = array();
-
-		foreach ( $parts as $part ) {
-			$slug = sanitize_title( trim( $part ) );
-			if ( '' !== $slug ) {
-				$out[] = $slug;
-			}
-		}
-
-		return array_values( array_unique( $out ) );
 	}
 
 	/**
