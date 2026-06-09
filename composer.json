@@ -11,7 +11,7 @@
   },
   "scripts": {
     "lint:phpcs": "phpcs --standard=phpcs.xml.dist",
-    "lint:php": "php -l lancedesk-smart-dynamic-accordion.php && php -l includes/class-ldrj-hbda-plugin.php && php -l includes/widgets/class-ldrj-hbda-smart-accordion-widget.php && php -l uninstall.php"
+    "lint:php": "php -l lancedesk-smart-dynamic-accordion.php && php -l includes/class-plugin.php && php -l includes/class-query.php && php -l includes/class-ajax.php && php -l includes/widgets/class-smart-accordion-widget.php && php -l uninstall.php"
   },
   "config": {
     "allow-plugins": {

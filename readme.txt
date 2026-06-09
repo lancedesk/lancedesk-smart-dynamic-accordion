@@ -55,6 +55,7 @@ Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 * Add load-more support via show-more button or infinite scroll when item count is limited.
 * Add full Elementor style controls for the load-more button (colors, typography, spacing, alignment).
 * Extract shared query logic and secure AJAX load-more endpoint with nonce verification.
+* Align include class filenames with WordPress PHPCS naming standards.
 
 = 1.0.7 =
 * Intelligent dividers: single line between items (no doubled 4px gaps from top+bottom borders).

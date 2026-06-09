@@ -38,7 +38,7 @@ final class Ajax {
 
 		$offset       = isset( $_POST['offset'] ) ? absint( wp_unslash( $_POST['offset'] ) ) : 0;
 		$widget_id    = isset( $_POST['widget_id'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['widget_id'] ) ) : '';
-		$settings_raw = isset( $_POST['settings'] ) ? wp_unslash( (string) $_POST['settings'] ) : '';
+		$settings_raw = isset( $_POST['settings'] ) ? sanitize_textarea_field( wp_unslash( (string) $_POST['settings'] ) ) : '';
 
 		if ( '' === $widget_id || '' === $settings_raw ) {
 			wp_send_json_error(

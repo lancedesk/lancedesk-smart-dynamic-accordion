@@ -175,6 +175,6 @@ if ( ! defined( 'LDRJ_HBDA_PLUGIN_URL' ) ) {
 	define( 'LDRJ_HBDA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-plugin.php';
+require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-plugin.php';
 
 \LanceDesk\HBDA\Plugin::instance();

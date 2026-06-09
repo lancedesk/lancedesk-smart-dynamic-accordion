@@ -12,7 +12,12 @@ Secure, modular, and Elementor-native accordion widget for WordPress with both m
 - Advanced query controls:
   - post type, count, order, order by, offset
   - include/exclude post IDs
-  - taxonomy slug + terms (slug or term ID)
+  - optional category and tag filters with AND/OR relation
+  - advanced custom taxonomy slug + terms (slug or term ID)
+- Load more for limited dynamic lists:
+  - show-more button with remaining count (`%d` placeholder)
+  - infinite scroll mode
+  - full Elementor style controls for the load-more button
 - Dynamic field mapping:
   - title from post title or custom field
   - content from post content, excerpt, or custom field
@@ -66,8 +71,10 @@ dynamic-accordion/
 │  ├─ css/ldrj-hbda-accordion.css
 │  └─ js/ldrj-hbda-accordion.js
 ├─ includes/
-│  ├─ class-ldrj-hbda-plugin.php
-│  └─ widgets/class-ldrj-hbda-smart-accordion-widget.php
+│  ├─ class-plugin.php
+│  ├─ class-query.php
+│  ├─ class-ajax.php
+│  └─ widgets/class-smart-accordion-widget.php
 ├─ lancedesk-smart-dynamic-accordion.php
 ├─ readme.txt
 ├─ README.md
@@ -78,7 +85,6 @@ dynamic-accordion/
 ## Roadmap
 
 - Dynamic tag support for richer Elementor integrations.
-- Optional AJAX/lazy loading for large datasets.
 - Additional content templates for post cards/media blocks inside accordion bodies.
 - Comprehensive unit and integration tests.
 
