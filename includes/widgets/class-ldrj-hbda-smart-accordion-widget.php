@@ -176,7 +176,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'   => esc_html__( 'Icon Position', 'lancedesk-smart-dynamic-accordion' ),
 				'type'    => Controls_Manager::CHOOSE,
 				'options' => array(
-					'after' => array(
+					'after'  => array(
 						'title' => esc_html__( 'After', 'lancedesk-smart-dynamic-accordion' ),
 						'icon'  => 'eicon-h-align-right',
 					),
@@ -317,8 +317,10 @@ class Smart_Accordion_Widget extends Widget_Base {
 			'ldrj_hbda_load_more_button_text',
 			array(
 				'label'       => esc_html__( 'Show More Button Text', 'lancedesk-smart-dynamic-accordion' ),
+				/* translators: %d: number of remaining accordion items. */
 				'description' => esc_html__( 'Use %d as a placeholder for the remaining item count.', 'lancedesk-smart-dynamic-accordion' ),
 				'type'        => Controls_Manager::TEXT,
+				/* translators: %d: number of remaining accordion items. */
 				'default'     => esc_html__( 'Show %d more', 'lancedesk-smart-dynamic-accordion' ),
 				'label_block' => true,
 				'condition'   => array(
@@ -960,8 +962,8 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'label'     => esc_html__( 'Background Color', 'lancedesk-smart-dynamic-accordion' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover'  => 'background-color: {{VALUE}};',
-					'{{WRAPPER}} .ldrj-hbda-trigger:focus'  => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:focus' => 'background-color: {{VALUE}};',
 					'{{WRAPPER}} .ldrj-hbda-trigger:active' => 'background-color: {{VALUE}};',
 				),
 			)
@@ -1008,9 +1010,9 @@ class Smart_Accordion_Widget extends Widget_Base {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => array( 'px', '%', 'em' ),
 				'selectors'  => array(
-					'{{WRAPPER}} .ldrj-hbda-trigger'        => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-					'{{WRAPPER}} .ldrj-hbda-trigger:hover'  => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-					'{{WRAPPER}} .ldrj-hbda-trigger:focus'  => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger'       => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:hover' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-trigger:focus' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 					'{{WRAPPER}} .ldrj-hbda-trigger:active' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				),
 				'default'    => array(
@@ -1366,7 +1368,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 					),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .ldrj-hbda-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .ldrj-hbda-icon'     => 'font-size: {{SIZE}}{{UNIT}};',
 					'{{WRAPPER}} .ldrj-hbda-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
 				),
 			)
@@ -1386,7 +1388,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 					),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .ldrj-hbda-icon svg' => 'stroke: currentColor; stroke-width: {{SIZE}}{{UNIT}}; paint-order: stroke fill;',
+					'{{WRAPPER}} .ldrj-hbda-icon svg'      => 'stroke: currentColor; stroke-width: {{SIZE}}{{UNIT}}; paint-order: stroke fill;',
 					'{{WRAPPER}} .ldrj-hbda-icon-fallback' => 'text-shadow: 0 0 {{SIZE}}{{UNIT}} currentColor;',
 				),
 			)
@@ -1524,20 +1526,20 @@ class Smart_Accordion_Widget extends Widget_Base {
 		}
 
 		$wrapper_attrs = array(
-			'class'            => $wrapper_classes,
-			'data-multi-open'  => $multi_open ? 'yes' : 'no',
-			'data-open-first'  => $open_first ? 'yes' : 'no',
+			'class'           => $wrapper_classes,
+			'data-multi-open' => $multi_open ? 'yes' : 'no',
+			'data-open-first' => $open_first ? 'yes' : 'no',
 		);
 
 		if ( ! empty( $load_more_config['enabled'] ) ) {
-			$wrapper_attrs['class'] .= ' ldrj-hbda-has-load-more';
-			$wrapper_attrs['data-load-more'] = 'yes';
-			$wrapper_attrs['data-load-more-mode'] = esc_attr( (string) $load_more_config['mode'] );
-			$wrapper_attrs['data-widget-id'] = esc_attr( $this->get_id() );
-			$wrapper_attrs['data-offset'] = (string) (int) $load_more_config['offset'];
-			$wrapper_attrs['data-remaining'] = (string) (int) $load_more_config['remaining'];
-			$wrapper_attrs['data-settings'] = esc_attr( wp_json_encode( $this->ldrj_hbda_get_ajax_settings_payload( $settings ) ) );
-			$wrapper_attrs['data-loading-text'] = esc_attr( (string) $load_more_config['loading_text'] );
+			$wrapper_attrs['class']               .= ' ldrj-hbda-has-load-more';
+			$wrapper_attrs['data-load-more']       = 'yes';
+			$wrapper_attrs['data-load-more-mode']  = esc_attr( (string) $load_more_config['mode'] );
+			$wrapper_attrs['data-widget-id']       = esc_attr( $this->get_id() );
+			$wrapper_attrs['data-offset']          = (string) (int) $load_more_config['offset'];
+			$wrapper_attrs['data-remaining']       = (string) (int) $load_more_config['remaining'];
+			$wrapper_attrs['data-settings']        = esc_attr( wp_json_encode( $this->ldrj_hbda_get_ajax_settings_payload( $settings ) ) );
+			$wrapper_attrs['data-loading-text']    = esc_attr( (string) $load_more_config['loading_text'] );
 			$wrapper_attrs['data-button-template'] = esc_attr( (string) $load_more_config['button_template'] );
 		}
 
@@ -1582,6 +1584,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 	 * @param int                  $index Item index.
 	 * @param array<string,mixed>  $settings Widget settings.
 	 * @param bool|null            $force_open Optional explicit open state.
+	 * @param string|null          $widget_id Optional Elementor widget ID for markup IDs.
 	 *
 	 * @return void
 	 */
@@ -1602,14 +1605,18 @@ class Smart_Accordion_Widget extends Widget_Base {
 		echo '<button type="button" class="ldrj-hbda-trigger" aria-expanded="' . esc_attr( $force_open ? 'true' : 'false' ) . '" aria-controls="' . esc_attr( $item_id ) . '">';
 		echo '<span class="ldrj-hbda-trigger-text">' . esc_html( $item['title'] ) . '</span>';
 		echo '<span class="ldrj-hbda-icon" aria-hidden="true">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Elementor icon markup is rendered via Icons_Manager.
 		echo '<span class="ldrj-hbda-icon-expand">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_expand_icon'] ?? array(), '+' ) . '</span>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Elementor icon markup is rendered via Icons_Manager.
 		echo '<span class="ldrj-hbda-icon-collapse">' . $this->ldrj_hbda_render_icon_markup( $settings, $settings['ldrj_hbda_collapse_icon'] ?? array(), '−' ) . '</span>';
 		echo '</span>';
 		echo '</button>';
 		echo '<div id="' . esc_attr( $item_id ) . '" class="ldrj-hbda-content-wrap" ' . ( $force_open ? '' : 'hidden' ) . '>';
 		echo '<div class="ldrj-hbda-content">' . wp_kses_post( $item['content'] ) . '</div>';
 		if ( ! empty( $item['url'] ) ) {
-			echo '<a class="ldrj-hbda-read-more" href="' . esc_url( $item['url'] ) . '"' . $this->ldrj_hbda_build_link_attributes( $item ) . '>' . esc_html( $item['read_more_label'] ) . '</a>';
+			$read_more_attrs = $this->ldrj_hbda_build_link_attributes( $item );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Link attributes are escaped in ldrj_hbda_build_link_attributes().
+			echo '<a class="ldrj-hbda-read-more" href="' . esc_url( $item['url'] ) . '"' . $read_more_attrs . '>' . esc_html( $item['read_more_label'] ) . '</a>';
 		}
 		echo '</div>';
 		echo '</div>';
@@ -1639,11 +1646,11 @@ class Smart_Accordion_Widget extends Widget_Base {
 			}
 
 			$items[] = array(
-				'title'           => $title,
-				'content'         => $content,
-				'url'             => '',
-				'read_more_label' => '',
-				'read_more_new_tab' => 'no',
+				'title'              => $title,
+				'content'            => $content,
+				'url'                => '',
+				'read_more_label'    => '',
+				'read_more_new_tab'  => 'no',
 				'read_more_nofollow' => 'no',
 			);
 		}
@@ -1684,6 +1691,7 @@ class Smart_Accordion_Widget extends Widget_Base {
 			'offset'          => $loaded_count,
 			'remaining'       => 0,
 			'loading_text'    => esc_html__( 'Loading…', 'lancedesk-smart-dynamic-accordion' ),
+			/* translators: %d: number of remaining accordion items. */
 			'button_template' => esc_html__( 'Show %d more', 'lancedesk-smart-dynamic-accordion' ),
 		);
 
@@ -1695,16 +1703,16 @@ class Smart_Accordion_Widget extends Widget_Base {
 			return $config;
 		}
 
-		$total = Query::ldrj_hbda_count_posts( $settings );
+		$total     = Query::ldrj_hbda_count_posts( $settings );
 		$remaining = max( 0, $total - $loaded_count );
 
 		if ( $remaining < 1 ) {
 			return $config;
 		}
 
-		$config['enabled'] = true;
-		$config['mode']    = isset( $settings['ldrj_hbda_load_more_mode'] ) && 'infinite_scroll' === $settings['ldrj_hbda_load_more_mode'] ? 'infinite_scroll' : 'button';
-		$config['offset']  = $loaded_count;
+		$config['enabled']   = true;
+		$config['mode']      = isset( $settings['ldrj_hbda_load_more_mode'] ) && 'infinite_scroll' === $settings['ldrj_hbda_load_more_mode'] ? 'infinite_scroll' : 'button';
+		$config['offset']    = $loaded_count;
 		$config['remaining'] = $remaining;
 
 		if ( ! empty( $settings['ldrj_hbda_load_more_loading_text'] ) ) {
@@ -1937,8 +1945,8 @@ class Smart_Accordion_Widget extends Widget_Base {
 	 * @return void
 	 */
 	private function ldrj_hbda_render_faq_schema( array $items, array $settings ): void {
-		$entities = array();
-		$min_items = isset( $settings['ldrj_hbda_faq_min_items'] ) ? absint( $settings['ldrj_hbda_faq_min_items'] ) : 2;
+		$entities              = array();
+		$min_items             = isset( $settings['ldrj_hbda_faq_min_items'] ) ? absint( $settings['ldrj_hbda_faq_min_items'] ) : 2;
 		$require_question_mark = isset( $settings['ldrj_hbda_faq_require_question_mark'] ) && 'yes' === $settings['ldrj_hbda_faq_require_question_mark'];
 
 		if ( $min_items < 1 ) {

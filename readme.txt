@@ -4,7 +4,7 @@ Tags: elementor, accordion, faq, dynamic content, widget
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -50,12 +50,15 @@ Yes. Use Dynamic Content Source set to Custom Field and provide a meta key.
 
 == Changelog ==
 
+= 1.0.9 =
+* Restore collision-safe `class-ldrj-hbda-*` include filenames and exclude them from PHPCS filename checks.
+* Fix PHPCS errors for text domain literals, icon output escaping annotations, and Yoda conditions.
+
 = 1.0.8 =
 * Add optional category and tag filters with AND/OR relation for dynamic queries.
 * Add load-more support via show-more button or infinite scroll when item count is limited.
 * Add full Elementor style controls for the load-more button (colors, typography, spacing, alignment).
 * Extract shared query logic and secure AJAX load-more endpoint with nonce verification.
-* Align include class filenames with WordPress PHPCS naming standards.
 
 = 1.0.7 =
 * Intelligent dividers: single line between items (no doubled 4px gaps from top+bottom borders).

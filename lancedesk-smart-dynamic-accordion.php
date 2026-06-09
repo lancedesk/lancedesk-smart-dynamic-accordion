@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LanceDesk Smart Dynamic Accordion for Elementor
  * Description: A secure, modular Elementor accordion widget with manual and dynamic post-based content sources.
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: Lance Desk
  * Author URI: https://lancedesk.com
  * Text Domain: lancedesk-smart-dynamic-accordion
@@ -76,7 +76,7 @@ function ldrj_hbda_maybe_show_conflict_notice(): void {
 	delete_transient( LDRJ_HBDA_CONFLICT_NOTICE_TRANSIENT );
 
 	echo '<div class="notice notice-error"><p>';
-	echo esc_html__( 'LanceDesk Smart Dynamic Accordion was deactivated because another active plugin copy with the same text domain was detected.', LDRJ_HBDA_TEXT_DOMAIN );
+	echo esc_html__( 'LanceDesk Smart Dynamic Accordion was deactivated because another active plugin copy with the same text domain was detected.', 'lancedesk-smart-dynamic-accordion' );
 	echo '</p></div>';
 }
 
@@ -100,8 +100,8 @@ function ldrj_hbda_activation_conflict_guard(): void {
 	set_transient( LDRJ_HBDA_CONFLICT_NOTICE_TRANSIENT, 1, MINUTE_IN_SECONDS );
 
 	wp_die(
-		esc_html__( 'Activation blocked: another active copy of LanceDesk Smart Dynamic Accordion is already running. Please keep only one installed copy active.', LDRJ_HBDA_TEXT_DOMAIN ),
-		esc_html__( 'Plugin Conflict', LDRJ_HBDA_TEXT_DOMAIN ),
+		esc_html__( 'Activation blocked: another active copy of LanceDesk Smart Dynamic Accordion is already running. Please keep only one installed copy active.', 'lancedesk-smart-dynamic-accordion' ),
+		esc_html__( 'Plugin Conflict', 'lancedesk-smart-dynamic-accordion' ),
 		array(
 			'response'  => 409,
 			'back_link' => true,
@@ -151,7 +151,7 @@ if ( class_exists( '\LanceDesk\HBDA\Plugin', false ) ) {
 			}
 
 			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'LanceDesk Smart Dynamic Accordion detected another active copy of the same plugin and deactivated this duplicate to prevent conflicts.', LDRJ_HBDA_TEXT_DOMAIN );
+			echo esc_html__( 'LanceDesk Smart Dynamic Accordion detected another active copy of the same plugin and deactivated this duplicate to prevent conflicts.', 'lancedesk-smart-dynamic-accordion' );
 			echo '</p></div>';
 		}
 	);
@@ -160,7 +160,7 @@ if ( class_exists( '\LanceDesk\HBDA\Plugin', false ) ) {
 }
 
 if ( ! defined( 'LDRJ_HBDA_VERSION' ) ) {
-	define( 'LDRJ_HBDA_VERSION', '1.0.8' );
+	define( 'LDRJ_HBDA_VERSION', '1.0.9' );
 }
 
 if ( ! defined( 'LDRJ_HBDA_PLUGIN_FILE' ) ) {
@@ -175,6 +175,6 @@ if ( ! defined( 'LDRJ_HBDA_PLUGIN_URL' ) ) {
 	define( 'LDRJ_HBDA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-plugin.php';
+require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-plugin.php';
 
 \LanceDesk\HBDA\Plugin::instance();

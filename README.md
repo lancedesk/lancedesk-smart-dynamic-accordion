@@ -71,10 +71,10 @@ dynamic-accordion/
 │  ├─ css/ldrj-hbda-accordion.css
 │  └─ js/ldrj-hbda-accordion.js
 ├─ includes/
-│  ├─ class-plugin.php
-│  ├─ class-query.php
-│  ├─ class-ajax.php
-│  └─ widgets/class-smart-accordion-widget.php
+│  ├─ class-ldrj-hbda-plugin.php
+│  ├─ class-ldrj-hbda-query.php
+│  ├─ class-ldrj-hbda-ajax.php
+│  └─ widgets/class-ldrj-hbda-smart-accordion-widget.php
 ├─ lancedesk-smart-dynamic-accordion.php
 ├─ readme.txt
 ├─ README.md

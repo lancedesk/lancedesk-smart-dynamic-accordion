@@ -271,8 +271,8 @@ final class Query {
 				}
 
 				$key             = $taxonomy->name . ':' . (int) $term->term_id;
-				/* translators: 1: taxonomy singular label, 2: term name. */
 				$options[ $key ] = sprintf(
+					/* translators: 1: taxonomy singular label, 2: term name. */
 					__( '%1$s: %2$s', 'lancedesk-smart-dynamic-accordion' ),
 					$taxonomy->labels->singular_name,
 					$term->name
@@ -323,7 +323,7 @@ final class Query {
 			}
 		}
 
-		if ( $value !== wp_strip_all_tags( $value ) ) {
+		if ( wp_strip_all_tags( $value ) !== $value ) {
 			return wp_kses_post( $value );
 		}
 
@@ -351,8 +351,8 @@ final class Query {
 			}
 
 			list( $taxonomy, $term_id ) = array_pad( explode( ':', $compound, 2 ), 2, '' );
-			$taxonomy = sanitize_key( $taxonomy );
-			$term_id  = absint( $term_id );
+			$taxonomy                   = sanitize_key( $taxonomy );
+			$term_id                    = absint( $term_id );
 
 			if ( '' === $taxonomy || $term_id < 1 || ! taxonomy_exists( $taxonomy ) ) {
 				continue;

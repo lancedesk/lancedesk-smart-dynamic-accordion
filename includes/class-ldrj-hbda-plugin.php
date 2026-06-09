@@ -96,9 +96,9 @@ final class Plugin {
 	 * @return void
 	 */
 	private function ldrj_hbda_load_files(): void {
-		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-query.php';
-		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ajax.php';
-		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/widgets/class-smart-accordion-widget.php';
+		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-query.php';
+		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/class-ldrj-hbda-ajax.php';
+		require_once LDRJ_HBDA_PLUGIN_PATH . 'includes/widgets/class-ldrj-hbda-smart-accordion-widget.php';
 	}
 
 	/**

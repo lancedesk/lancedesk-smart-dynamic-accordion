@@ -17,4 +17,9 @@
 	<rule ref="WordPress-Core"/>
 	<rule ref="WordPress-Docs"/>
 	<rule ref="WordPress.Security"/>
+
+	<!-- Prefixed class filenames (class-ldrj-hbda-*) are intentional for collision-safe autoloading. -->
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>*/includes/*</exclude-pattern>
+	</rule>
 </ruleset>
